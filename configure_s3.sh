@@ -6,8 +6,8 @@
 export S3_BUCKET_NAME="sdv-data-pro"
 
 # Required: AWS credentials
-export AWS_ACCESS_KEY_ID="AKIAWYHDRAXEK2YGGRNU"
-export AWS_SECRET_ACCESS_KEY="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"
+export AWS_ACCESS_KEY_ID="______"
+export AWS_SECRET_ACCESS_KEY="______"
 
 # Optional: AWS region (default: us-east-1)
 export AWS_REGION="ap-southeast-2"
