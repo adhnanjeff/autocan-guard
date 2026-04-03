@@ -1,0 +1,54 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+dist/
+*.egg-info/
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+package-lock.json
+yarn.lock
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temporary files
+/tmp/
+*.pkl
+*.log
+
+# ETL Output
+/tmp/etl_output/
+
+# Secrets
+*.pem
+*.key
+keys/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# MongoDB
+*.db
+
+# Kafka logs
+kafka_logs/
+
+# React build
+react-app/build/
+react-app/.cache/

@@ -1,0 +1,528 @@
+{
+  "inputs": [
+    "evaluation_data/20260221_202623_001_default.jsonl",
+    "evaluation_data/20260221_202623_002_codex_eval.jsonl",
+    "evaluation_data/20260221_203258_001_default.jsonl",
+    "evaluation_data/20260221_203258_002_codex_eval_active_only.jsonl",
+    "evaluation_data/20260221_203822_001_default.jsonl",
+    "evaluation_data/20260221_203822_002_codex_eval.jsonl",
+    "evaluation_data/20260222_162356_001_default.jsonl",
+    "evaluation_data/20260222_162356_002_my_eval.jsonl",
+    "evaluation_data/20260222_163446_001_default.jsonl",
+    "evaluation_data/20260222_163446_002_improved_model.jsonl",
+    "evaluation_data/20260222_164449_001_default.jsonl",
+    "evaluation_data/20260222_164449_002_improved_v2.jsonl"
+  ],
+  "num_samples": 2698,
+  "num_attack_segments": 18,
+  "target_fpr": 0.01,
+  "final_threshold": 0.6708333333333334,
+  "metrics": {
+    "recall_tpr": 0.23482428115015974,
+    "false_positive_rate": 0.009652509652509652,
+    "precision": 0.8802395209580839,
+    "f1": 0.37074401008827246,
+    "pr_auc": 0.6614067007285689,
+    "accuracy": 0.8150481838398814,
+    "confusion": {
+      "tp": 147,
+      "fp": 20,
+      "tn": 2052,
+      "fn": 479
+    },
+    "confusion_matrix": {
+      "labels": [
+        0,
+        1
+      ],
+      "label_names": {
+        "0": "normal",
+        "1": "attack"
+      },
+      "matrix": [
+        [
+          2052,
+          20
+        ],
+        [
+          479,
+          147
+        ]
+      ]
+    }
+  },
+  "practical_metrics": {
+    "description": "Metrics accounting for detection latency (7-message window after attack)",
+    "accuracy": 0.7809488510007413,
+    "recall": 0.21808510638297873,
+    "precision": 0.9820359281437125,
+    "f1": 0.35690968443960824,
+    "fpr": 0.001541623843782117,
+    "confusion": {
+      "tp": 164,
+      "fp": 3,
+      "tn": 1943,
+      "fn": 588
+    }
+  },
+  "detection_latency": {
+    "mean_seconds": 0.32994956236619216,
+    "mean_messages": 3.769230769230769,
+    "by_attack_segment": [
+      {
+        "segment_id": 1,
+        "attack_tag": "speed",
+        "latency_sec": 0.2197880744934082,
+        "latency_messages": 2
+      },
+      {
+        "segment_id": 2,
+        "attack_tag": "steering",
+        "latency_sec": null,
+        "latency_messages": null
+      },
+      {
+        "segment_id": 3,
+        "attack_tag": "kafka",
+        "latency_sec": 0.5489170551300049,
+        "latency_messages": 6
+      },
+      {
+        "segment_id": 1,
+        "attack_tag": "speed",
+        "latency_sec": 0.0,
+        "latency_messages": 0
+      },
+      {
+        "segment_id": 2,
+        "attack_tag": "steering",
+        "latency_sec": null,
+        "latency_messages": null
+      },
+      {
+        "segment_id": 3,
+        "attack_tag": "kafka",
+        "latency_sec": 0.559685230255127,
+        "latency_messages": 6
+      },
+      {
+        "segment_id": 1,
+        "attack_tag": "speed",
+        "latency_sec": 0.0,
+        "latency_messages": 0
+      },
+      {
+        "segment_id": 2,
+        "attack_tag": "steering",
+        "latency_sec": null,
+        "latency_messages": null
+      },
+      {
+        "segment_id": 3,
+        "attack_tag": "kafka",
+        "latency_sec": 0.5390539169311523,
+        "latency_messages": 6
+      },
+      {
+        "segment_id": 1,
+        "attack_tag": "speed",
+        "latency_sec": 0.0,
+        "latency_messages": 0
+      },
+      {
+        "segment_id": 2,
+        "attack_tag": "steering",
+        "latency_sec": null,
+        "latency_messages": null
+      },
+      {
+        "segment_id": 3,
+        "attack_tag": "kafka",
+        "latency_sec": 0.5585379600524902,
+        "latency_messages": 6
+      },
+      {
+        "segment_id": 1,
+        "attack_tag": "speed",
+        "latency_sec": 0.10277915000915527,
+        "latency_messages": 1
+      },
+      {
+        "segment_id": 2,
+        "attack_tag": "steering",
+        "latency_sec": null,
+        "latency_messages": null
+      },
+      {
+        "segment_id": 3,
+        "attack_tag": "kafka",
+        "latency_sec": 0.5458908081054688,
+        "latency_messages": 6
+      },
+      {
+        "segment_id": 1,
+        "attack_tag": "speed",
+        "latency_sec": 0.0,
+        "latency_messages": 0
+      },
+      {
+        "segment_id": 2,
+        "attack_tag": "steering",
+        "latency_sec": 0.6550030708312988,
+        "latency_messages": 10
+      },
+      {
+        "segment_id": 3,
+        "attack_tag": "kafka",
+        "latency_sec": 0.5596890449523926,
+        "latency_messages": 6
+      }
+    ]
+  },
+  "trust_drop_latency": {
+    "threshold": 0.8,
+    "mean_seconds": 0.1723445389005873,
+    "mean_messages": 1.7222222222222223,
+    "by_attack_segment": [
+      {
+        "segment_id": 1,
+        "attack_tag": "speed",
+        "latency_sec": 0.4441711902618408,
+        "latency_messages": 4
+      },
+      {
+        "segment_id": 2,
+        "attack_tag": "steering",
+        "latency_sec": 0.0,
+        "latency_messages": 0
+      },
+      {
+        "segment_id": 3,
+        "attack_tag": "kafka",
+        "latency_sec": 0.7488970756530762,
+        "latency_messages": 8
+      },
+      {
+        "segment_id": 1,
+        "attack_tag": "speed",
+        "latency_sec": 0.21252131462097168,
+        "latency_messages": 2
+      },
+      {
+        "segment_id": 2,
+        "attack_tag": "steering",
+        "latency_sec": 0.0,
+        "latency_messages": 0
+      },
+      {
+        "segment_id": 3,
+        "attack_tag": "kafka",
+        "latency_sec": 0.0,
+        "latency_messages": 0
+      },
+      {
+        "segment_id": 1,
+        "attack_tag": "speed",
+        "latency_sec": 0.21406006813049316,
+        "latency_messages": 2
+      },
+      {
+        "segment_id": 2,
+        "attack_tag": "steering",
+        "latency_sec": 0.0,
+        "latency_messages": 0
+      },
+      {
+        "segment_id": 3,
+        "attack_tag": "kafka",
+        "latency_sec": 0.7473559379577637,
+        "latency_messages": 8
+      },
+      {
+        "segment_id": 1,
+        "attack_tag": "speed",
+        "latency_sec": 0.21379804611206055,
+        "latency_messages": 2
+      },
+      {
+        "segment_id": 2,
+        "attack_tag": "steering",
+        "latency_sec": 0.0,
+        "latency_messages": 0
+      },
+      {
+        "segment_id": 3,
+        "attack_tag": "kafka",
+        "latency_sec": 0.0,
+        "latency_messages": 0
+      },
+      {
+        "segment_id": 1,
+        "attack_tag": "speed",
+        "latency_sec": 0.32279300689697266,
+        "latency_messages": 3
+      },
+      {
+        "segment_id": 2,
+        "attack_tag": "steering",
+        "latency_sec": 0.0,
+        "latency_messages": 0
+      },
+      {
+        "segment_id": 3,
+        "attack_tag": "kafka",
+        "latency_sec": 0.0,
+        "latency_messages": 0
+      },
+      {
+        "segment_id": 1,
+        "attack_tag": "speed",
+        "latency_sec": 0.19860506057739258,
+        "latency_messages": 2
+      },
+      {
+        "segment_id": 2,
+        "attack_tag": "steering",
+        "latency_sec": 0.0,
+        "latency_messages": 0
+      },
+      {
+        "segment_id": 3,
+        "attack_tag": "kafka",
+        "latency_sec": 0.0,
+        "latency_messages": 0
+      }
+    ]
+  },
+  "ips_activation_latency": {
+    "mean_seconds": 0.08921937147776286,
+    "mean_messages": 0.8333333333333334,
+    "by_attack_segment": [
+      {
+        "segment_id": 1,
+        "attack_tag": "speed",
+        "latency_sec": 0.4441711902618408,
+        "latency_messages": 4
+      },
+      {
+        "segment_id": 2,
+        "attack_tag": "steering",
+        "latency_sec": 0.0,
+        "latency_messages": 0
+      },
+      {
+        "segment_id": 3,
+        "attack_tag": "kafka",
+        "latency_sec": 0.0,
+        "latency_messages": 0
+      },
+      {
+        "segment_id": 1,
+        "attack_tag": "speed",
+        "latency_sec": 0.21252131462097168,
+        "latency_messages": 2
+      },
+      {
+        "segment_id": 2,
+        "attack_tag": "steering",
+        "latency_sec": 0.0,
+        "latency_messages": 0
+      },
+      {
+        "segment_id": 3,
+        "attack_tag": "kafka",
+        "latency_sec": 0.0,
+        "latency_messages": 0
+      },
+      {
+        "segment_id": 1,
+        "attack_tag": "speed",
+        "latency_sec": 0.21406006813049316,
+        "latency_messages": 2
+      },
+      {
+        "segment_id": 2,
+        "attack_tag": "steering",
+        "latency_sec": 0.0,
+        "latency_messages": 0
+      },
+      {
+        "segment_id": 3,
+        "attack_tag": "kafka",
+        "latency_sec": 0.0,
+        "latency_messages": 0
+      },
+      {
+        "segment_id": 1,
+        "attack_tag": "speed",
+        "latency_sec": 0.21379804611206055,
+        "latency_messages": 2
+      },
+      {
+        "segment_id": 2,
+        "attack_tag": "steering",
+        "latency_sec": 0.0,
+        "latency_messages": 0
+      },
+      {
+        "segment_id": 3,
+        "attack_tag": "kafka",
+        "latency_sec": 0.0,
+        "latency_messages": 0
+      },
+      {
+        "segment_id": 1,
+        "attack_tag": "speed",
+        "latency_sec": 0.32279300689697266,
+        "latency_messages": 3
+      },
+      {
+        "segment_id": 2,
+        "attack_tag": "steering",
+        "latency_sec": 0.0,
+        "latency_messages": 0
+      },
+      {
+        "segment_id": 3,
+        "attack_tag": "kafka",
+        "latency_sec": 0.0,
+        "latency_messages": 0
+      },
+      {
+        "segment_id": 1,
+        "attack_tag": "speed",
+        "latency_sec": 0.19860506057739258,
+        "latency_messages": 2
+      },
+      {
+        "segment_id": 2,
+        "attack_tag": "steering",
+        "latency_sec": 0.0,
+        "latency_messages": 0
+      },
+      {
+        "segment_id": 3,
+        "attack_tag": "kafka",
+        "latency_sec": 0.0,
+        "latency_messages": 0
+      }
+    ]
+  },
+  "containment_before_unsafe": {
+    "unsafe_speed_threshold": 60.0,
+    "unsafe_steering_threshold": 20.0,
+    "contained_attack_count": 18,
+    "total_attack_count": 18,
+    "contained_percent": 100.0,
+    "by_attack_segment": [
+      {
+        "segment_id": 1,
+        "attack_tag": "speed",
+        "contained_before_unsafe": true,
+        "unsafe_observed": false
+      },
+      {
+        "segment_id": 2,
+        "attack_tag": "steering",
+        "contained_before_unsafe": true,
+        "unsafe_observed": false
+      },
+      {
+        "segment_id": 3,
+        "attack_tag": "kafka",
+        "contained_before_unsafe": true,
+        "unsafe_observed": false
+      },
+      {
+        "segment_id": 1,
+        "attack_tag": "speed",
+        "contained_before_unsafe": true,
+        "unsafe_observed": false
+      },
+      {
+        "segment_id": 2,
+        "attack_tag": "steering",
+        "contained_before_unsafe": true,
+        "unsafe_observed": false
+      },
+      {
+        "segment_id": 3,
+        "attack_tag": "kafka",
+        "contained_before_unsafe": true,
+        "unsafe_observed": false
+      },
+      {
+        "segment_id": 1,
+        "attack_tag": "speed",
+        "contained_before_unsafe": true,
+        "unsafe_observed": false
+      },
+      {
+        "segment_id": 2,
+        "attack_tag": "steering",
+        "contained_before_unsafe": true,
+        "unsafe_observed": false
+      },
+      {
+        "segment_id": 3,
+        "attack_tag": "kafka",
+        "contained_before_unsafe": true,
+        "unsafe_observed": false
+      },
+      {
+        "segment_id": 1,
+        "attack_tag": "speed",
+        "contained_before_unsafe": true,
+        "unsafe_observed": false
+      },
+      {
+        "segment_id": 2,
+        "attack_tag": "steering",
+        "contained_before_unsafe": true,
+        "unsafe_observed": false
+      },
+      {
+        "segment_id": 3,
+        "attack_tag": "kafka",
+        "contained_before_unsafe": true,
+        "unsafe_observed": false
+      },
+      {
+        "segment_id": 1,
+        "attack_tag": "speed",
+        "contained_before_unsafe": true,
+        "unsafe_observed": false
+      },
+      {
+        "segment_id": 2,
+        "attack_tag": "steering",
+        "contained_before_unsafe": true,
+        "unsafe_observed": false
+      },
+      {
+        "segment_id": 3,
+        "attack_tag": "kafka",
+        "contained_before_unsafe": true,
+        "unsafe_observed": false
+      },
+      {
+        "segment_id": 1,
+        "attack_tag": "speed",
+        "contained_before_unsafe": true,
+        "unsafe_observed": false
+      },
+      {
+        "segment_id": 2,
+        "attack_tag": "steering",
+        "contained_before_unsafe": true,
+        "unsafe_observed": false
+      },
+      {
+        "segment_id": 3,
+        "attack_tag": "kafka",
+        "contained_before_unsafe": true,
+        "unsafe_observed": false
+      }
+    ]
+  }
+}

@@ -1,0 +1,51 @@
+### Vehicle Security API - HTTP Requests
+### Base URL: http://localhost:8000
+
+### Health Check
+GET http://localhost:8000/health
+
+### System Status
+GET http://localhost:8000/system/status
+
+### Get Current ML Mode
+GET http://localhost:8000/system/mode
+
+### Toggle ML OFF (Crypto Only Mode)
+POST http://localhost:8000/system/mode
+Content-Type: application/json
+
+{
+  "ml_enabled": false
+}
+
+### Toggle ML ON (Crypto + ML Mode)
+POST http://localhost:8000/system/mode
+Content-Type: application/json
+
+{
+  "ml_enabled": true
+}
+
+### Get All Vehicles
+GET http://localhost:8000/vehicles
+
+### Get Vehicle Trust Status
+GET http://localhost:8000/vehicles/vehicleA/trust
+
+### Get Vehicle Alerts (Last 20)
+GET http://localhost:8000/vehicles/vehicleA/alerts
+
+### Get Vehicle Alerts (Last 50)
+GET http://localhost:8000/vehicles/vehicleA/alerts?limit=50
+
+### Get Trust History (Last 100)
+GET http://localhost:8000/vehicles/vehicleA/trust/history
+
+### Get Trust History (Last 50)
+GET http://localhost:8000/vehicles/vehicleA/trust/history?limit=50
+
+### API Documentation (Auto-generated)
+GET http://localhost:8000/docs
+
+### OpenAPI Schema
+GET http://localhost:8000/openapi.json
