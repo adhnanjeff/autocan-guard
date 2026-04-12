@@ -34,7 +34,15 @@ class MockCANBus:
             if os.path.exists(MESSAGE_FILE):
                 try:
                     with open(MESSAGE_FILE, 'rb') as f:
-                        messages = pickle.load(f)
+                        loaded = pickle.load(f)
+                        # Handle both list and dict formats
+                        if isinstance(loaded, list):
+                            messages = loaded
+                        elif isinstance(loaded, dict):
+                            # If it's a dict (secure message), convert to list
+                            messages = []
+                        else:
+                            messages = []
                 except:
                     pass
             messages.append(message)
@@ -50,13 +58,20 @@ class MockCANBus:
                 if os.path.exists(MESSAGE_FILE):
                     try:
                         with open(MESSAGE_FILE, 'rb') as f:
-                            messages = pickle.load(f)
-                        if messages:
-                            msg = messages.pop(0)
-                            with open(MESSAGE_FILE, 'wb') as f:
-                                pickle.dump(messages, f)
-                            print(f"📨 MockBus: Retrieved message ID=0x{msg.arbitration_id:03x}, {len(messages)} remaining")
-                            return msg
+                            loaded = pickle.load(f)
+                        
+                        # Handle both list and dict formats
+                        if isinstance(loaded, list):
+                            messages = loaded
+                            if messages:
+                                msg = messages.pop(0)
+                                with open(MESSAGE_FILE, 'wb') as f:
+                                    pickle.dump(messages, f)
+                                print(f"📨 MockBus: Retrieved message ID=0x{msg.arbitration_id:03x}, {len(messages)} remaining")
+                                return msg
+                        elif isinstance(loaded, dict):
+                            # It's a secure message dict, return None and let listener handle it
+                            pass
                     except Exception as e:
                         print(f"⚠️ MockBus recv error: {e}")
             time.sleep(0.01)

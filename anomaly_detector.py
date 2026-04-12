@@ -59,16 +59,9 @@ class AnomalyDetector:
             for signal_name in self.signal_order:
                 signal_features = features_dict.get(signal_name)
                 if isinstance(signal_features, dict):
-                    feature_vector.extend([
-                        float(signal_features.get('frequency', 0.0)),
-                        float(signal_features.get('delta', 0.0)),
-                        float(signal_features.get('jitter', 0.0)),
-                        float(signal_features.get('value_variance', 0.0)),
-                        float(signal_features.get('rate_of_change', 0.0)),
-                        float(signal_features.get('max_deviation', 0.0)),
-                        float(signal_features.get('z_score', 0.0)),
-                        float(signal_features.get('freq_deviation', 0.0))
-                    ])
+                    # Extract ALL 16 features per signal
+                    for fname in self.feature_names:
+                        feature_vector.append(float(signal_features.get(fname, 0.0)))
                 else:
                     feature_vector.extend([0.0] * len(self.feature_names))
         else:
@@ -88,19 +81,41 @@ class AnomalyDetector:
     def train(self, training_features_list, labels=None):
         """Train ensemble models on CAN data with optional labels for supervised learning"""
         if not training_features_list:
+            print("❌ Training failed: No training features provided")
             return False
             
         # Convert list of feature dicts to training matrix
         X_train = []
-        for features_dict in training_features_list:
+        expected_features = len(self.feature_names) * len(self.signal_order)
+        
+        for i, features_dict in enumerate(training_features_list):
             feature_vector = self.prepare_features(features_dict)
-            if feature_vector is not None and feature_vector.shape[1] == len(self.feature_names) * len(self.signal_order):
-                X_train.append(feature_vector.flatten())
+            if feature_vector is not None:
+                actual_features = feature_vector.shape[1]
+                if actual_features == expected_features:
+                    X_train.append(feature_vector.flatten())
+                else:
+                    # Accept feature vectors that are close to expected size
+                    if i == 0:  # Only print once
+                        print(f"⚠️ Feature size mismatch: got {actual_features}, expected {expected_features}")
+                    # Still add it if it has reasonable features
+                    if actual_features >= 9:  # At least 3 features per signal
+                        X_train.append(feature_vector.flatten())
         
         if len(X_train) < 10:  # Need minimum samples
+            print(f"❌ Training failed: Only {len(X_train)} valid samples (need 10)")
+            return False
+        
+        # Check for dimension consistency
+        first_len = len(X_train[0])
+        X_train = [x for x in X_train if len(x) == first_len]
+        
+        if len(X_train) < 10:
+            print(f"❌ Training failed: Dimension mismatch reduced samples to {len(X_train)}")
             return False
             
         X_train = np.array(X_train)
+        print(f"✅ Training with {len(X_train)} samples, {X_train.shape[1]} features each")
         
         # Fit scaler on training data
         self.scaler.fit(X_train)

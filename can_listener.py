@@ -83,6 +83,10 @@ class CANListener:
         self.training_samples = 0
         self.max_training_samples = 25  # Faster training
         
+        # Startup grace period - ignore first N messages to avoid false positives during initialization
+        self.startup_grace_period = 50  # Ignore first 50 messages
+        self.messages_since_startup = 0
+        
         # Security statistics
         self.verified_messages = 0
         self.rejected_messages = 0
@@ -95,14 +99,8 @@ class CANListener:
         self.current_steering = 0.0
         self.current_brake = 0.0
 
-        # Detection threshold used for decision logging/evaluation
-        self.anomaly_decision_threshold = 0.3
-
-        # Sustained anomaly tracking for attack persistence detection
-        self.sustained_anomaly_window = []  # Recent anomaly scores
-        self.sustained_anomaly_max_window = 15  # Track last 15 messages
-        self.recent_physics_violation = False
-        self.physics_violation_cooldown = 0  # Cooldown counter after physics violation
+        # Detection threshold used for decision logging/evaluation (raised to reduce false positives)
+        self.anomaly_decision_threshold = 0.5  # Raised from 0.3 to 0.5
 
         # Evaluation logging/session state
         self.eval_lock = threading.Lock()
@@ -200,10 +198,24 @@ class CANListener:
             signal_features = ml_features.get(signal_name)
             if not signal_features:
                 continue
+            # Include all features expected by anomaly_detector
             snapshot[signal_name] = {
                 "frequency": float(signal_features.get("frequency", 0.0)),
                 "delta": float(signal_features.get("delta", 0.0)),
-                "jitter": float(signal_features.get("jitter", 0.0))
+                "jitter": float(signal_features.get("jitter", 0.0)),
+                "value_variance": float(signal_features.get("value_variance", 0.0)),
+                "rate_of_change": float(signal_features.get("rate_of_change", 0.0)),
+                "max_deviation": float(signal_features.get("max_deviation", 0.0)),
+                "z_score": float(signal_features.get("z_score", 0.0)),
+                "freq_deviation": float(signal_features.get("freq_deviation", 0.0)),
+                "entropy": float(signal_features.get("entropy", 0.0)),
+                "kurtosis": float(signal_features.get("kurtosis", 0.0)),
+                "skewness": float(signal_features.get("skewness", 0.0)),
+                "autocorr": float(signal_features.get("autocorr", 0.0)),
+                "peak_density": float(signal_features.get("peak_density", 0.0)),
+                "mad": float(signal_features.get("mad", 0.0)),
+                "value_range": float(signal_features.get("value_range", 0.0)),
+                "cv": float(signal_features.get("cv", 0.0))
             }
         return snapshot
 
@@ -388,10 +400,18 @@ class CANListener:
         detection_details = []
         is_physics_valid = physics_result['overall_valid']
         
+        # Increment message counter
+        self.messages_since_startup += 1
+        
         # Skip anomaly detection for UI controller messages (legitimate user input)
         if device_id and "ui-controller" in device_id:
             total_anomaly_score = 0.0  # UI commands are always trusted
             print(f"✅ UI Command trusted: {signal_name}={signal_value:.1f}")
+        elif self.messages_since_startup <= self.startup_grace_period:
+            # Grace period - allow system to stabilize, no anomaly detection
+            total_anomaly_score = 0.0
+            if self.messages_since_startup == self.startup_grace_period:
+                print(f"✅ Startup grace period complete ({self.startup_grace_period} messages)")
         elif not self.training_mode:
             # Layer 1: ML Anomaly Score
             if ml_feature_snapshot:
@@ -399,7 +419,7 @@ class CANListener:
                 if ml_anomaly_score > self.anomaly_decision_threshold:
                     detection_details.append(f"ML:{ml_anomaly_score:.2f}")
             
-            # Layer 2: Control Energy Anomalies
+            # Layer 2: Control Energy Anomalies (relaxed thresholds for normal operation)
             if behavioral_features:
                 # Check control energy features
                 steering_energy = behavioral_features.get('steering_energy', 0.0)
@@ -407,18 +427,18 @@ class CANListener:
                 oscillation_rate = behavioral_features.get('oscillation_rate', 0.0)
                 control_aggression = behavioral_features.get('control_aggression', 0.0)
                 
-                # Aggressive thresholds for ECU compromise detection
-                if steering_energy > 5.0:  # High energy
-                    control_anomaly_score += 0.4
+                # Higher thresholds to reduce false positives during normal operation
+                if steering_energy > 8.0:  # High energy (raised from 5.0)
+                    control_anomaly_score += 0.3  # Reduced from 0.4
                     detection_details.append(f"Energy:{steering_energy:.1f}")
-                if steering_jerk > 3.0:  # High jerk
-                    control_anomaly_score += 0.3
+                if steering_jerk > 5.0:  # High jerk (raised from 3.0)
+                    control_anomaly_score += 0.2  # Reduced from 0.3
                     detection_details.append(f"Jerk:{steering_jerk:.1f}")
-                if oscillation_rate > 1.0:  # Oscillation
-                    control_anomaly_score += 0.5
+                if oscillation_rate > 1.5:  # Oscillation (raised from 1.0)
+                    control_anomaly_score += 0.3  # Reduced from 0.5
                     detection_details.append(f"Osc:{oscillation_rate:.1f}")
-                if control_aggression > 5.0:  # Aggressive control
-                    control_anomaly_score += 0.3
+                if control_aggression > 8.0:  # Aggressive control (raised from 5.0)
+                    control_anomaly_score += 0.2  # Reduced from 0.3
                     detection_details.append(f"Aggr:{control_aggression:.1f}")
                     
                 control_anomaly_score = min(1.0, control_anomaly_score)
@@ -439,41 +459,12 @@ class CANListener:
             physics_score = physics_result['physics_score']
             temporal_score = 1.0 - temporal_result['temporal_anomaly_score']
             
-            # Track physics violations for sustained detection
-            if not physics_result['overall_valid']:
-                self.recent_physics_violation = True
-                self.physics_violation_cooldown = 25  # Elevated sensitivity for 25 messages
-            elif self.physics_violation_cooldown > 0:
-                self.physics_violation_cooldown -= 1
-                if self.physics_violation_cooldown == 0:
-                    self.recent_physics_violation = False
-            
-            # Enhanced trust fusion with stronger temporal weighting
-            base_anomaly = 1.0 - (
-                0.4 * (1.0 - ml_score) +       # 40% ML Score
-                0.15 * physics_score +          # 15% Physics Score
-                0.45 * temporal_score           # 45% Temporal Score (significantly increased)
+            # Industry-standard trust fusion
+            total_anomaly_score = 1.0 - (
+                0.6 * (1.0 - ml_score) +      # 60% ML Score
+                0.25 * physics_score +         # 25% Physics Score  
+                0.15 * temporal_score          # 15% Temporal Score
             )
-            
-            # Sustained anomaly detection: boost score if recent anomalies detected
-            self.sustained_anomaly_window.append(base_anomaly)
-            if len(self.sustained_anomaly_window) > self.sustained_anomaly_max_window:
-                self.sustained_anomaly_window.pop(0)
-            
-            # Calculate sustained threat level
-            recent_high_scores = sum(1 for s in self.sustained_anomaly_window if s > 0.25)
-            sustained_threat_ratio = recent_high_scores / max(1, len(self.sustained_anomaly_window))
-            
-            # Boost anomaly score when in sustained attack pattern - more aggressive
-            sustained_boost = 0.0
-            if sustained_threat_ratio > 0.2 or self.recent_physics_violation:
-                sustained_boost = 0.2 * sustained_threat_ratio
-                if self.physics_violation_cooldown > 15:
-                    sustained_boost += 0.15  # Extra boost right after physics violation
-                elif self.physics_violation_cooldown > 5:
-                    sustained_boost += 0.1  # Moderate boost during cooldown
-            
-            total_anomaly_score = min(1.0, base_anomaly + sustained_boost)
             
             # Physics violations are non-negotiable
             if not physics_result['overall_valid']:

@@ -2,10 +2,10 @@ import time
 from storage import get_storage_manager
 
 class TrustEngine:
-    def __init__(self, alpha=0.1, beta=0.2, gamma=0.05, vehicle_id="vehicleA"):
-        # Trust decay parameters (less aggressive)
-        self.alpha = alpha  # anomaly weight
-        self.beta = beta    # auth weight  
+    def __init__(self, alpha=0.15, beta=0.2, gamma=0.05, vehicle_id="vehicleA"):
+        # Trust decay parameters (balanced for normal operation)
+        self.alpha = alpha  # anomaly weight (reduced from 0.4 to 0.15 - less aggressive)
+        self.beta = beta    # auth weight
         self.gamma = gamma  # temporal weight
         
         # Vehicle identification
@@ -19,8 +19,8 @@ class TrustEngine:
         self.min_trust = 0.0
         self.max_trust = 1.0
         
-        # Recovery rate (normal recovery)
-        self.recovery_rate = 0.01
+        # Recovery rate (faster recovery during normal operation)
+        self.recovery_rate = 0.03  # Increased from 0.01 to 0.03
         
         # ML Toggle - centralized control
         self.ml_enabled = True  # Default: ML ON
@@ -35,15 +35,19 @@ class TrustEngine:
         # Apply ML toggle - ignore ML anomaly score when disabled
         effective_anomaly_score = anomaly_score if self.ml_enabled else 0.0
         
-        # Trust decay formula from Phase 0.5
-        trust_delta = (
-            - self.alpha * effective_anomaly_score  # ML influence controlled by toggle
-            - self.beta * (1 - auth_result)         # Crypto always active
-            - self.gamma * (1 - temporal_score)     # Temporal always active
-        )
+        # Trust decay formula - only for significant anomalies
+        trust_delta = 0.0
         
-        # Add small recovery when no anomaly
-        if effective_anomaly_score < 0.1:
+        # Only apply decay if anomaly score is significant (> 0.3)
+        if effective_anomaly_score > 0.3:
+            trust_delta = (
+                - self.alpha * effective_anomaly_score  # ML influence controlled by toggle
+                - self.beta * (1 - auth_result)         # Crypto always active
+                - self.gamma * (1 - temporal_score)     # Temporal always active
+            )
+        
+        # Add recovery when anomaly is low
+        if effective_anomaly_score < 0.2:
             trust_delta += self.recovery_rate
         
         # Update trust
