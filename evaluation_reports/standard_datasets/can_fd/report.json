@@ -1,0 +1,63 @@
+{
+  "dataset": "can_fd",
+  "n_frames": 570,
+  "n_train": 399,
+  "n_test": 171,
+  "class_balance": {
+    "normal": 415,
+    "attack": 155
+  },
+  "classification_metrics": {
+    "accuracy": 0.9707602339181286,
+    "precision": 0.9767441860465116,
+    "recall": 0.9130434782608695,
+    "f1": 0.9438202247191011,
+    "specificity": 0.992,
+    "fpr": 0.008,
+    "confusion": {
+      "tp": 42,
+      "tn": 124,
+      "fp": 1,
+      "fn": 4
+    }
+  },
+  "latency_throughput": {
+    "mean_ms": 13.71032967877558,
+    "median_ms": 13.694250010303222,
+    "p95_ms": 14.42812499590218,
+    "p99_ms": 19.538620697858427,
+    "throughput_msgs_per_sec": 72.93770634473222
+  },
+  "per_attack_breakdown": {
+    "flooding": {
+      "n": 18,
+      "detected": 18,
+      "recall": 1.0
+    },
+    "fuzzy": {
+      "n": 19,
+      "detected": 15,
+      "recall": 0.7894736842105263
+    },
+    "malfunction": {
+      "n": 9,
+      "detected": 9,
+      "recall": 1.0
+    },
+    "normal": {
+      "n": 125,
+      "false_positives": 1,
+      "fpr": 0.008
+    }
+  },
+  "feature_names": [
+    "can_id",
+    "dlc",
+    "payload_entropy",
+    "inter_message_interval",
+    "payload_variation"
+  ],
+  "feature_set": "paper5",
+  "normalized": true,
+  "model_description": "BenchmarkModel: average of RandomForestClassifier(n_estimators=200, class_weight=balanced) and GradientBoostingClassifier probabilities, threshold=0.5. IsolationForest fitted on normal training rows for an auxiliary anomaly score (not used in the final prediction)."
+}

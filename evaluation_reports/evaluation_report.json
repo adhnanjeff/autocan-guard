@@ -1,34 +1,34 @@
 {
   "metadata": {
-    "timestamp": "2026-04-08T10:43:55.805450",
-    "num_runs": 5,
-    "messages_per_run": 1000,
-    "total_messages": 5000
+    "timestamp": "2026-05-08T10:50:11.403544",
+    "num_runs": 15,
+    "messages_per_run": 1500,
+    "total_messages": 22500
   },
   "confidence_intervals": {
     "latency_mean": {
-      "mean": 0.019,
-      "stdev": 0.012,
-      "ci_lower": 0.009,
-      "ci_upper": 0.03,
-      "margin": 0.011,
-      "n": 5
+      "mean": 0.124,
+      "stdev": 0.048,
+      "ci_lower": 0.099,
+      "ci_upper": 0.149,
+      "margin": 0.025,
+      "n": 15
     },
     "latency_p95": {
-      "mean": 0.037,
-      "stdev": 0.027,
-      "ci_lower": 0.013,
-      "ci_upper": 0.061,
-      "margin": 0.024,
-      "n": 5
+      "mean": 0.225,
+      "stdev": 0.088,
+      "ci_lower": 0.179,
+      "ci_upper": 0.27,
+      "margin": 0.045,
+      "n": 15
     },
     "throughput": {
-      "mean": 17255.512,
-      "stdev": 4876.975,
-      "ci_lower": 12893.413,
-      "ci_upper": 21617.611,
-      "margin": 4362.099,
-      "n": 5
+      "mean": 7007.169,
+      "stdev": 4030.594,
+      "ci_lower": 4925.779,
+      "ci_upper": 9088.558,
+      "margin": 2081.39,
+      "n": 15
     },
     "accuracy": {
       "mean": 100.0,
@@ -36,13 +36,13 @@
       "ci_lower": 100.0,
       "ci_upper": 100.0,
       "margin": 0.0,
-      "n": 5
+      "n": 15
     }
   },
   "classification_metrics": {
     "confusion_matrix": {
-      "TP": 1557,
-      "TN": 3443,
+      "TP": 6772,
+      "TN": 15728,
       "FP": 0,
       "FN": 0
     },
@@ -53,83 +53,223 @@
     "accuracy": 100.0,
     "fpr": 0.0,
     "fnr": 0.0,
-    "total_samples": 5000
+    "total_samples": 22500
   },
   "per_run_data": [
     {
       "run_id": 1,
-      "messages": 1000,
-      "elapsed_seconds": 0.042,
-      "throughput": 24063.29,
+      "messages": 1500,
+      "elapsed_seconds": 0.074,
+      "throughput": 20191.72,
       "latency": {
-        "mean": 0.005,
-        "median": 0.006,
-        "stdev": 0.005,
-        "p95": 0.011,
-        "p99": 0.013
+        "mean": 0.016,
+        "median": 0.015,
+        "stdev": 0.013,
+        "p95": 0.036,
+        "p99": 0.038
       },
       "accuracy": 100.0
     },
     {
       "run_id": 2,
-      "messages": 1000,
-      "elapsed_seconds": 0.051,
-      "throughput": 19659.08,
+      "messages": 1500,
+      "elapsed_seconds": 0.141,
+      "throughput": 10624.88,
       "latency": {
-        "mean": 0.012,
-        "median": 0.015,
-        "stdev": 0.008,
-        "p95": 0.019,
-        "p99": 0.029
+        "mean": 0.046,
+        "median": 0.058,
+        "stdev": 0.034,
+        "p95": 0.083,
+        "p99": 0.142
       },
       "accuracy": 100.0
     },
     {
       "run_id": 3,
-      "messages": 1000,
-      "elapsed_seconds": 0.059,
-      "throughput": 16942.78,
+      "messages": 1500,
+      "elapsed_seconds": 0.183,
+      "throughput": 8185.26,
       "latency": {
-        "mean": 0.018,
-        "median": 0.025,
-        "stdev": 0.013,
-        "p95": 0.03,
-        "p99": 0.039
+        "mean": 0.07,
+        "median": 0.088,
+        "stdev": 0.053,
+        "p95": 0.122,
+        "p99": 0.198
       },
       "accuracy": 100.0
     },
     {
       "run_id": 4,
-      "messages": 1000,
-      "elapsed_seconds": 0.071,
-      "throughput": 14095.8,
+      "messages": 1500,
+      "elapsed_seconds": 0.177,
+      "throughput": 8453.95,
       "latency": {
-        "mean": 0.026,
-        "median": 0.034,
-        "stdev": 0.02,
-        "p95": 0.049,
-        "p99": 0.072
+        "mean": 0.084,
+        "median": 0.112,
+        "stdev": 0.054,
+        "p95": 0.133,
+        "p99": 0.151
       },
       "accuracy": 100.0
     },
     {
       "run_id": 5,
-      "messages": 1000,
-      "elapsed_seconds": 0.087,
-      "throughput": 11516.61,
+      "messages": 1500,
+      "elapsed_seconds": 0.228,
+      "throughput": 6589.44,
       "latency": {
-        "mean": 0.036,
-        "median": 0.042,
-        "stdev": 0.025,
-        "p95": 0.078,
-        "p99": 0.093
+        "mean": 0.111,
+        "median": 0.142,
+        "stdev": 0.09,
+        "p95": 0.226,
+        "p99": 0.359
+      },
+      "accuracy": 100.0
+    },
+    {
+      "run_id": 6,
+      "messages": 1500,
+      "elapsed_seconds": 0.266,
+      "throughput": 5643.44,
+      "latency": {
+        "mean": 0.13,
+        "median": 0.169,
+        "stdev": 0.095,
+        "p95": 0.246,
+        "p99": 0.373
+      },
+      "accuracy": 100.0
+    },
+    {
+      "run_id": 7,
+      "messages": 1500,
+      "elapsed_seconds": 0.289,
+      "throughput": 5183.3,
+      "latency": {
+        "mean": 0.154,
+        "median": 0.201,
+        "stdev": 0.113,
+        "p95": 0.271,
+        "p99": 0.442
+      },
+      "accuracy": 100.0
+    },
+    {
+      "run_id": 8,
+      "messages": 1500,
+      "elapsed_seconds": 0.315,
+      "throughput": 4765.55,
+      "latency": {
+        "mean": 0.165,
+        "median": 0.2,
+        "stdev": 0.13,
+        "p95": 0.311,
+        "p99": 0.524
+      },
+      "accuracy": 100.0
+    },
+    {
+      "run_id": 9,
+      "messages": 1500,
+      "elapsed_seconds": 0.29,
+      "throughput": 5171.22,
+      "latency": {
+        "mean": 0.153,
+        "median": 0.198,
+        "stdev": 0.109,
+        "p95": 0.282,
+        "p99": 0.457
+      },
+      "accuracy": 100.0
+    },
+    {
+      "run_id": 10,
+      "messages": 1500,
+      "elapsed_seconds": 0.306,
+      "throughput": 4895.66,
+      "latency": {
+        "mean": 0.159,
+        "median": 0.198,
+        "stdev": 0.118,
+        "p95": 0.277,
+        "p99": 0.524
+      },
+      "accuracy": 100.0
+    },
+    {
+      "run_id": 11,
+      "messages": 1500,
+      "elapsed_seconds": 0.297,
+      "throughput": 5051.56,
+      "latency": {
+        "mean": 0.157,
+        "median": 0.2,
+        "stdev": 0.117,
+        "p95": 0.284,
+        "p99": 0.483
+      },
+      "accuracy": 100.0
+    },
+    {
+      "run_id": 12,
+      "messages": 1500,
+      "elapsed_seconds": 0.304,
+      "throughput": 4928.39,
+      "latency": {
+        "mean": 0.158,
+        "median": 0.198,
+        "stdev": 0.123,
+        "p95": 0.28,
+        "p99": 0.529
+      },
+      "accuracy": 100.0
+    },
+    {
+      "run_id": 13,
+      "messages": 1500,
+      "elapsed_seconds": 0.274,
+      "throughput": 5475.61,
+      "latency": {
+        "mean": 0.145,
+        "median": 0.197,
+        "stdev": 0.102,
+        "p95": 0.223,
+        "p99": 0.261
+      },
+      "accuracy": 100.0
+    },
+    {
+      "run_id": 14,
+      "messages": 1500,
+      "elapsed_seconds": 0.291,
+      "throughput": 5150.94,
+      "latency": {
+        "mean": 0.155,
+        "median": 0.199,
+        "stdev": 0.117,
+        "p95": 0.287,
+        "p99": 0.473
+      },
+      "accuracy": 100.0
+    },
+    {
+      "run_id": 15,
+      "messages": 1500,
+      "elapsed_seconds": 0.313,
+      "throughput": 4796.61,
+      "latency": {
+        "mean": 0.16,
+        "median": 0.198,
+        "stdev": 0.132,
+        "p95": 0.311,
+        "p99": 0.619
       },
       "accuracy": 100.0
     }
   ],
   "variance_analysis": {
-    "latency_variance": 0.0001,
-    "throughput_variance": 23784889.4551,
+    "latency_variance": 0.0023,
+    "throughput_variance": 16245688.4024,
     "accuracy_variance": 0.0
   }
 }

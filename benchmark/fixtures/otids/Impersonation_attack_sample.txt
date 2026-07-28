@@ -1,0 +1,190 @@
+Timestamp:         1479122000.001873        ID: 0510    000    DLC: 8    97 00 39 88 9d 26 1a ae
+Timestamp:         1479122000.003852        ID: 0316    100    DLC: 3    59 cb bb
+Timestamp:         1479122000.005449        ID: 0350    000    DLC: 3    e1 07 82
+Timestamp:         1479122000.006456        ID: 0002    000    DLC: 8    a7 85 c4 b6 e2 14 3a 94
+Timestamp:         1479122000.008281        ID: 05f0    000    DLC: 8    64 58 18 91 4a 5c 77 ac
+Timestamp:         1479122000.010294        ID: 0164    000    DLC: 8    14 21 7e a0 af a4 d8 00
+Timestamp:         1479122000.011680        ID: 0164    000    DLC: 8    2e 02 68 11 ec ad fe d2
+Timestamp:         1479122000.013461        ID: 0329    100    DLC: 6    3f 95 72 4d bd b6
+Timestamp:         1479122000.014344        ID: 0164    000    DLC: 8    70 39 bc 9f 6d d3 7c 5f
+Timestamp:         1479122000.016380        ID: 02a0    000    DLC: 3    eb b4 4f
+Timestamp:         1479122000.017429        ID: 0510    000    DLC: 8    57 b0 05 b4 c6 fd 58 b9
+Timestamp:         1479122000.019108        ID: 043f    100    DLC: 8    a4 6a e9 0d d9 89 06 49
+Timestamp:         1479122000.021157        ID: 0260    000    DLC: 6    6c 89 94 8a 14 ed
+Timestamp:         1479122000.021730        ID: 0510    000    DLC: 3    fa 0e 58
+Timestamp:         1479122000.023814        ID: 0164    000    DLC: 8    b1 2e 87 50 43 b3 0e e1
+Timestamp:         1479122000.024481        ID: 0510    100    DLC: 6    7e 8a 8e 18 4e 5c
+Timestamp:         1479122000.026073        ID: 0164    000    DLC: 8    01 3a ec d5 74 8b 2d 29
+Timestamp:         1479122000.027931        ID: 0164    000    DLC: 8    ee bd 46 c8 1c 43 61 4b
+Timestamp:         1479122000.028705        ID: 018f    000    DLC: 8    f4 b5 54 20 97 1d d0 d4
+Timestamp:         1479122000.030706        ID: 0002    000    DLC: 3    a7 f9 44
+Timestamp:         1479122000.031076        ID: 0545    000    DLC: 8    15 64 53 da ba 34 73 49
+Timestamp:         1479122000.033354        ID: 0164    000    DLC: 8    e0 b2 37 c0 5e 5f 8a 18
+Timestamp:         1479122000.033696        ID: 04b1    000    DLC: 3    dc 6e a8
+Timestamp:         1479122000.034645        ID: 043f    000    DLC: 8    1f 31 4e ef ab 9d c9 80
+Timestamp:         1479122000.035359        ID: 0164    000    DLC: 8    36 93 06 03 81 e2 69 fb
+Timestamp:         1479122000.035728        ID: 0350    000    DLC: 8    24 06 7d fe 83 eb d0 6f
+Timestamp:         1479122000.037001        ID: 0153    000    DLC: 6    f8 44 07 e1 8c 85
+Timestamp:         1479122000.038546        ID: 0164    000    DLC: 8    dd c2 74 a6 60 e1 92 a5
+Timestamp:         1479122000.040220        ID: 0329    000    DLC: 8    af c7 a5 c9 2c 88 f5 9f
+Timestamp:         1479122000.041363        ID: 0350    000    DLC: 3    ed 65 ab
+Timestamp:         1479122000.042674        ID: 0164    000    DLC: 8    e4 bd ae 8b e8 76 96 17
+Timestamp:         1479122000.043030        ID: 0153    000    DLC: 3    db e5 2b
+Timestamp:         1479122000.044897        ID: 0316    000    DLC: 8    a6 f9 6a e4 66 d5 23 6e
+Timestamp:         1479122000.046857        ID: 0164    000    DLC: 8    20 f8 ef 2d 40 e0 5a fe
+Timestamp:         1479122000.048606        ID: 0164    000    DLC: 8    48 c3 62 0f a8 28 20 99
+Timestamp:         1479122000.050822        ID: 043f    000    DLC: 8    28 5e e5 89 98 6f e8 3a
+Timestamp:         1479122000.051843        ID: 02a0    000    DLC: 8    17 dc 52 1d d7 2a 77 79
+Timestamp:         1479122000.054332        ID: 05f0    000    DLC: 3    8f c5 4a
+Timestamp:         1479122000.054695        ID: 0510    000    DLC: 3    34 21 35
+Timestamp:         1479122000.056422        ID: 0164    000    DLC: 8    22 e7 73 5b db d8 4b 25
+Timestamp:         1479122000.058400        ID: 0350    000    DLC: 8    09 55 70 f3 54 bf af 09
+Timestamp:         1479122000.059885        ID: 02a0    000    DLC: 6    af 1c c8 a7 d1 3b
+Timestamp:         1479122000.060090        ID: 043f    000    DLC: 8    67 dd c7 1e 34 80 26 e3
+Timestamp:         1479122000.060605        ID: 0164    000    DLC: 8    df 1a 1c 1c 1c 3a f1 2a
+Timestamp:         1479122000.062369        ID: 0329    000    DLC: 3    ba 99 ca
+Timestamp:         1479122000.063970        ID: 04b1    000    DLC: 8    be 09 47 72 62 e4 97 77
+Timestamp:         1479122000.065805        ID: 04b1    000    DLC: 3    03 54 8d
+Timestamp:         1479122000.066310        ID: 0164    000    DLC: 8    e7 64 73 89 82 5d 4d dd
+Timestamp:         1479122000.067723        ID: 05f0    000    DLC: 8    96 78 bc db 23 b7 0d b4
+Timestamp:         1479122000.069454        ID: 0164    000    DLC: 8    41 19 89 b7 84 b4 9a 38
+Timestamp:         1479122000.070247        ID: 04b1    000    DLC: 8    ed d9 5f eb 1d 5a 6d 3f
+Timestamp:         1479122000.070726        ID: 0164    000    DLC: 8    22 9e b5 ab 59 40 4a fd
+Timestamp:         1479122000.072711        ID: 0510    000    DLC: 8    e7 68 10 70 8d cb 29 ed
+Timestamp:         1479122000.074632        ID: 0164    000    DLC: 8    dc e6 7d 6e 51 8a e7 4d
+Timestamp:         1479122000.075508        ID: 0545    000    DLC: 3    14 fb 94
+Timestamp:         1479122000.077914        ID: 0164    000    DLC: 8    b9 83 3d 59 d0 5f 40 ee
+Timestamp:         1479122000.080411        ID: 0316    000    DLC: 6    1b 47 b0 3c 68 3d
+Timestamp:         1479122000.081131        ID: 0545    000    DLC: 8    6c b9 69 4d 9b 49 b0 48
+Timestamp:         1479122000.083099        ID: 0350    000    DLC: 6    ba e6 fe bd a7 31
+Timestamp:         1479122000.083347        ID: 0002    000    DLC: 8    09 1b a6 95 b4 db 43 7c
+Timestamp:         1479122000.084516        ID: 0164    000    DLC: 8    c7 69 68 6f 23 f5 79 a7
+Timestamp:         1479122000.086505        ID: 0350    000    DLC: 8    59 fe 4b f2 f0 a5 73 83
+Timestamp:         1479122000.088044        ID: 0350    000    DLC: 6    6c 7a d9 70 79 b0
+Timestamp:         1479122000.090279        ID: 0164    000    DLC: 8    2b a7 61 34 b4 2e 96 ff
+Timestamp:         1479122000.091844        ID: 018f    100    DLC: 3    f7 e1 cc
+Timestamp:         1479122000.092396        ID: 018f    000    DLC: 8    e5 f7 e3 fb 37 b1 37 04
+Timestamp:         1479122000.094446        ID: 0164    000    DLC: 8    db c0 0e d3 c6 7d ab 42
+Timestamp:         1479122000.096773        ID: 0164    000    DLC: 8    e0 d0 8f d6 56 f6 f4 95
+Timestamp:         1479122000.097813        ID: 0164    000    DLC: 8    a4 c8 df 40 62 16 5e 13
+Timestamp:         1479122000.099932        ID: 02a0    000    DLC: 8    d6 44 75 7e 4e 18 d2 6a
+Timestamp:         1479122000.101390        ID: 0164    000    DLC: 8    f5 46 5d 7e b3 a3 5a fd
+Timestamp:         1479122000.101595        ID: 04b1    000    DLC: 8    ab b0 4b 2e 75 e6 b6 db
+Timestamp:         1479122000.103688        ID: 0153    000    DLC: 8    25 ad 01 69 be 05 36 49
+Timestamp:         1479122000.104476        ID: 0164    000    DLC: 8    e0 cd 8e d6 fb 0d 24 c4
+Timestamp:         1479122000.105808        ID: 0002    000    DLC: 8    ae f8 e6 62 f2 b4 23 5c
+Timestamp:         1479122000.106555        ID: 0260    000    DLC: 8    b9 df 21 15 52 f3 be 8c
+Timestamp:         1479122000.107093        ID: 043f    000    DLC: 8    45 ab 8a 2d fb a5 ab dc
+Timestamp:         1479122000.109442        ID: 04b1    000    DLC: 8    c8 99 0a ec 29 49 67 f7
+Timestamp:         1479122000.109739        ID: 05f0    000    DLC: 3    35 de 55
+Timestamp:         1479122000.110806        ID: 05f0    000    DLC: 8    f3 d2 13 28 2a 78 10 73
+Timestamp:         1479122000.112272        ID: 0164    000    DLC: 8    74 20 96 fa d7 57 e6 8d
+Timestamp:         1479122000.112554        ID: 0164    000    DLC: 8    12 81 24 a7 42 11 73 07
+Timestamp:         1479122000.114391        ID: 0002    000    DLC: 6    c6 c1 7c 90 e8 69
+Timestamp:         1479122000.115160        ID: 0545    000    DLC: 8    51 63 9e bf e8 f4 f1 af
+Timestamp:         1479122000.117522        ID: 0350    000    DLC: 6    53 b5 2c 63 e8 6a
+Timestamp:         1479122000.119729        ID: 0329    000    DLC: 8    3a 96 02 dc 48 33 28 4c
+Timestamp:         1479122000.120170        ID: 0164    000    DLC: 8    7c 62 ae 24 fe 39 f0 15
+Timestamp:         1479122000.121243        ID: 0164    000    DLC: 8    d6 01 ad c6 c0 a2 69 39
+Timestamp:         1479122000.123714        ID: 0164    000    DLC: 8    c3 b7 6f de 65 df a2 02
+Timestamp:         1479122000.125020        ID: 05f0    000    DLC: 6    cc ef 73 11 00 70
+Timestamp:         1479122000.126132        ID: 0164    000    DLC: 8    79 fe a9 e4 77 92 ca d3
+Timestamp:         1479122000.126745        ID: 0164    000    DLC: 8    d3 16 9b b0 18 69 22 11
+Timestamp:         1479122000.127840        ID: 0002    000    DLC: 6    2a b5 e5 d1 4b a4
+Timestamp:         1479122000.129371        ID: 05f0    000    DLC: 6    63 00 a0 7c cf bb
+Timestamp:         1479122000.130242        ID: 02a0    000    DLC: 3    b6 b1 c6
+Timestamp:         1479122000.131051        ID: 043f    000    DLC: 3    64 c5 25
+Timestamp:         1479122000.133039        ID: 0350    000    DLC: 6    71 fd 2b 80 13 89
+Timestamp:         1479122000.133849        ID: 0164    000    DLC: 8    b7 b1 d7 6d f1 fb ff 3a
+Timestamp:         1479122000.135088        ID: 0153    000    DLC: 6    8e 5f 6b 0e 3d 0a
+Timestamp:         1479122000.136827        ID: 04b1    000    DLC: 8    6f 66 15 d8 ec c7 a3 5c
+Timestamp:         1479122000.138693        ID: 0164    000    DLC: 8    71 9d c3 00 fb 64 61 e5
+Timestamp:         1479122000.140427        ID: 04b1    000    DLC: 3    b7 44 4e
+Timestamp:         1479122000.140796        ID: 018f    000    DLC: 8    40 a1 b8 80 12 0f ff 00
+Timestamp:         1479122000.143203        ID: 04b1    000    DLC: 3    8e 27 95
+Timestamp:         1479122000.145183        ID: 04b1    000    DLC: 8    66 0b b1 8c 4d 00 c9 31
+Timestamp:         1479122000.147047        ID: 0153    000    DLC: 6    e5 74 97 01 e8 17
+Timestamp:         1479122000.147792        ID: 0260    000    DLC: 6    a5 7d aa e4 a0 bb
+Timestamp:         1479122000.148272        ID: 0002    000    DLC: 8    18 2b c9 27 68 df 5e a7
+Timestamp:         1479122000.149692        ID: 043f    000    DLC: 3    48 81 5c
+Timestamp:         1479122000.151578        ID: 0002    000    DLC: 3    1e 9d 3c
+Timestamp:         1479122000.154069        ID: 0164    000    DLC: 8    59 fd 82 b8 ec d9 3e 1a
+Timestamp:         1479122000.154939        ID: 0260    000    DLC: 6    f3 75 cf 12 c8 95
+Timestamp:         1479122000.156519        ID: 0164    000    DLC: 8    b4 7b 19 12 e7 cd 19 9e
+Timestamp:         1479122000.158724        ID: 0002    000    DLC: 6    ee e5 70 7c 86 75
+Timestamp:         1479122000.159647        ID: 0545    000    DLC: 8    22 e9 38 a5 57 e5 5c 28
+Timestamp:         1479122000.161840        ID: 0545    000    DLC: 8    e4 a0 0c ab e1 82 8a 76
+Timestamp:         1479122000.164100        ID: 0164    000    DLC: 8    c2 e7 d0 40 6f 5c 44 97
+Timestamp:         1479122000.164702        ID: 0164    000    DLC: 8    19 27 4a 1c 6e 4a 65 52
+Timestamp:         1479122000.165315        ID: 02a0    000    DLC: 3    c7 bb 13
+Timestamp:         1479122000.166877        ID: 018f    100    DLC: 3    d2 c8 22
+Timestamp:         1479122000.167382        ID: 0002    000    DLC: 6    4e ff ff 89 cb 81
+Timestamp:         1479122000.169131        ID: 0153    000    DLC: 8    4c 76 df 27 ad a0 0c c7
+Timestamp:         1479122000.169981        ID: 0164    000    DLC: 8    8e c8 6f 19 b2 2f dc f9
+Timestamp:         1479122000.170641        ID: 0164    000    DLC: 8    62 9c 5d a9 f1 5d 09 0d
+Timestamp:         1479122000.171936        ID: 05f0    000    DLC: 8    9d 36 b4 7b 5d d8 41 bc
+Timestamp:         1479122000.172701        ID: 0164    000    DLC: 8    78 3b 7a 96 94 d2 97 46
+Timestamp:         1479122000.173822        ID: 0164    000    DLC: 8    8e 91 0e de 5c 98 b1 e6
+Timestamp:         1479122000.176188        ID: 0329    000    DLC: 8    4b 80 6d 2b 09 16 07 ef
+Timestamp:         1479122000.176675        ID: 0329    000    DLC: 8    42 14 7b 9e 1e fb 2c 49
+Timestamp:         1479122000.178261        ID: 05f0    000    DLC: 8    1c 7f 6d 88 03 53 a0 be
+Timestamp:         1479122000.178870        ID: 0164    000    DLC: 8    e6 0e 70 d1 f4 29 fd bb
+Timestamp:         1479122000.180348        ID: 0545    000    DLC: 6    1c b9 66 71 86 3f
+Timestamp:         1479122000.182284        ID: 02a0    000    DLC: 8    e3 3c 63 7f d5 a7 e1 0c
+Timestamp:         1479122000.184227        ID: 0153    000    DLC: 8    80 09 5e 68 ca 2d b6 c9
+Timestamp:         1479122000.186662        ID: 0164    000    DLC: 8    d8 fc 6c e1 84 00 01 e9
+Timestamp:         1479122000.187292        ID: 0164    000    DLC: 8    7d 10 cb f2 88 77 0d 6a
+Timestamp:         1479122000.189188        ID: 0316    000    DLC: 6    59 d8 a3 76 47 79
+Timestamp:         1479122000.190412        ID: 0260    000    DLC: 8    f3 ea 30 15 20 8d 8f 1d
+Timestamp:         1479122000.192615        ID: 0329    000    DLC: 8    48 1a 44 a6 d0 a4 43 ba
+Timestamp:         1479122000.193546        ID: 0002    000    DLC: 8    c6 25 0f 24 c0 a5 c2 bd
+Timestamp:         1479122000.195689        ID: 043f    000    DLC: 3    d3 cd 99
+Timestamp:         1479122000.196164        ID: 0164    000    DLC: 8    51 e0 1f 14 88 fc 27 ca
+Timestamp:         1479122000.198131        ID: 0164    000    DLC: 8    47 6a d8 85 9b c5 3f ac
+Timestamp:         1479122000.199811        ID: 0260    000    DLC: 6    d0 65 66 b4 8f eb
+Timestamp:         1479122000.202256        ID: 05f0    100    DLC: 3    d5 96 d7
+Timestamp:         1479122000.204571        ID: 0164    000    DLC: 8    75 20 e3 8c ed b2 04 ff
+Timestamp:         1479122000.205047        ID: 0164    000    DLC: 8    8b 19 e9 31 53 d0 cd e5
+Timestamp:         1479122000.206095        ID: 0350    000    DLC: 3    88 c0 87
+Timestamp:         1479122000.208474        ID: 0164    000    DLC: 8    d5 98 f1 d4 39 10 e4 d2
+Timestamp:         1479122000.210212        ID: 0153    000    DLC: 3    9e ed 01
+Timestamp:         1479122000.212258        ID: 0316    000    DLC: 6    59 f3 c8 4a e0 64
+Timestamp:         1479122000.214711        ID: 0316    000    DLC: 6    66 b2 89 8c 35 0e
+Timestamp:         1479122000.215984        ID: 0329    000    DLC: 8    ca 35 75 49 cb e5 2c fc
+Timestamp:         1479122000.216921        ID: 0153    000    DLC: 8    f5 67 88 a3 f9 ad c6 92
+Timestamp:         1479122000.219389        ID: 0164    000    DLC: 8    0d c6 f4 db cf 1d 5c 0c
+Timestamp:         1479122000.220355        ID: 0164    000    DLC: 8    00 4b bf 33 bf 09 80 bb
+Timestamp:         1479122000.221748        ID: 043f    100    DLC: 6    ba 78 c7 b9 f4 8a
+Timestamp:         1479122000.222433        ID: 0260    000    DLC: 6    ee 16 4c b4 50 36
+Timestamp:         1479122000.224757        ID: 0329    000    DLC: 8    6b 41 38 e3 ac 75 7d 2d
+Timestamp:         1479122000.225811        ID: 05f0    000    DLC: 8    be d8 69 78 ec 57 60 85
+Timestamp:         1479122000.226481        ID: 0164    000    DLC: 8    82 45 40 5c 12 3c 00 a6
+Timestamp:         1479122000.228325        ID: 0002    000    DLC: 8    e9 2c 52 54 8b db 16 e5
+Timestamp:         1479122000.230471        ID: 018f    000    DLC: 6    64 c0 cc 33 62 e9
+Timestamp:         1479122000.231905        ID: 0153    000    DLC: 8    6c d5 d0 45 3d 6e f5 51
+Timestamp:         1479122000.232340        ID: 05f0    000    DLC: 3    24 05 79
+Timestamp:         1479122000.233341        ID: 043f    000    DLC: 8    ff e4 97 84 af 4e 8f 08
+Timestamp:         1479122000.235415        ID: 018f    000    DLC: 8    9d be c2 89 d3 2a 3e 91
+Timestamp:         1479122000.236921        ID: 04b1    000    DLC: 6    be 55 53 f8 1d 31
+Timestamp:         1479122000.238827        ID: 0545    000    DLC: 3    3a 2f 15
+Timestamp:         1479122000.240550        ID: 0545    000    DLC: 8    e2 83 78 ad 3c 50 cb a3
+Timestamp:         1479122000.241813        ID: 0164    000    DLC: 8    2e 8b b9 3c a9 b2 6b 7b
+Timestamp:         1479122000.242450        ID: 0164    000    DLC: 8    0b 37 c7 ea 40 2a 82 a8
+Timestamp:         1479122000.243202        ID: 0153    000    DLC: 6    6e 48 90 88 fd 1e
+Timestamp:         1479122000.244177        ID: 043f    000    DLC: 3    30 ae 98
+Timestamp:         1479122000.246290        ID: 0316    000    DLC: 6    8c b3 1f 18 6b 09
+Timestamp:         1479122000.247736        ID: 0510    000    DLC: 8    d2 56 a7 6c c9 a5 25 61
+Timestamp:         1479122000.249991        ID: 04b1    000    DLC: 6    db d8 bb 96 4b 8d
+Timestamp:         1479122000.251742        ID: 0329    000    DLC: 3    1c 77 21
+Timestamp:         1479122000.253635        ID: 02a0    000    DLC: 8    61 84 89 58 38 3a a9 bd
+Timestamp:         1479122000.255554        ID: 0164    000    DLC: 8    39 ba 39 55 81 48 d4 13
+Timestamp:         1479122000.256694        ID: 0545    000    DLC: 8    a2 93 1b 09 da 7a 58 7a
+Timestamp:         1479122000.258915        ID: 02a0    000    DLC: 3    84 17 f5
+Timestamp:         1479122000.260847        ID: 0164    000    DLC: 8    3c 3a 70 27 50 28 1b ed
+Timestamp:         1479122000.261060        ID: 02a0    000    DLC: 8    79 13 08 3f a0 a3 96 36
+Timestamp:         1479122000.262760        ID: 0164    000    DLC: 8    f7 a6 39 9d 2b 3e f2 96
+Timestamp:         1479122000.264330        ID: 04b1    000    DLC: 8    bd 96 04 a0 4d 3e 63 b6
+Timestamp:         1479122000.266217        ID: 05f0    000    DLC: 3    65 d9 cf
+Timestamp:         1479122000.268357        ID: 0164    000    DLC: 8    1e bd e1 89 26 ff 5b 0c
+Timestamp:         1479122000.269467        ID: 0316    000    DLC: 3    95 43 67
+Timestamp:         1479122000.271898        ID: 0164    000    DLC: 8    3a 11 44 03 81 6b 93 e2

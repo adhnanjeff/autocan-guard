@@ -28,10 +28,10 @@ class SDVKafkaProducer:
             ssl_context = ssl.create_default_context(ssl.Purpose.SERVER_AUTH)
             ssl_context.check_hostname = False
             ssl_context.verify_mode = ssl.CERT_REQUIRED
-            ssl_context.load_verify_locations('kafka/certs/ca-cert')
+            ssl_context.load_verify_locations('kafka_config/certs/ca-cert')
             ssl_context.load_cert_chain(
-                f'kafka/certs/{self.vehicle_id}-cert',
-                f'kafka/certs/{self.vehicle_id}-key'
+                f'kafka_config/certs/{self.vehicle_id}-cert',
+                f'kafka_config/certs/{self.vehicle_id}-key'
             )
             
             self.producer = KafkaProducer(

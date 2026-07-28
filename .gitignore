@@ -52,3 +52,8 @@ kafka_logs/
 # React build
 react-app/build/
 react-app/.cache/
+
+# Kafka TLS material (extensionless names not caught by *.key/*.pem)
+kafka/certs/
+ca-key
+ca-cert

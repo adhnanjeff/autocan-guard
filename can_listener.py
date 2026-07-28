@@ -1,5 +1,6 @@
 import threading
 import time
+from collections import deque
 from vehicle_state import VehicleStateEngine
 import pickle
 import os
@@ -20,6 +21,8 @@ from contextual_validator import ContextualValidator
 from physics_validator import PhysicsValidator
 from temporal_features import TemporalFeatureExtractor
 from ips_engine import IPSPolicyEngine
+from mahalanobis_detector import AdaptiveMahalanobisDetector
+from risk_index import compute_attack_severity_index, severity_grade
 from v2v_alerts import V2VAlertSystem
 from v2v_consumer import V2VAlertConsumer
 from storage import get_storage_manager
@@ -65,7 +68,21 @@ class CANListener:
         self.contextual_validator = ContextualValidator()
         self.physics_validator = PhysicsValidator()
         self.temporal_extractor = TemporalFeatureExtractor()
-        
+
+        # Layer 0: fast context-aware adaptive Mahalanobis pre-filter (runs
+        # on every message, contributes to detection, never gates the
+        # heavier ensemble above). Uses an adaptive threshold tau(t) driven by
+        # trust and recent-state variability (paper Eq. 1).
+        self.mahalanobis_detector = AdaptiveMahalanobisDetector()
+        # Recent vehicle speeds -> normalized state variability sigma_s(t).
+        self._recent_speeds = deque(maxlen=20)
+        self._state_var_ref = 15.0  # km/h std that maps to sigma_s = 1.0
+
+        # Latest Attack Severity Index (paper Eq. 3) - reporting only; does not
+        # affect policy/IPS decisions (those remain trust-driven).
+        self.last_asi = 0.0
+        self.last_asi_grade = "LOW"
+
         # Storage integration
         self.storage = get_storage_manager()
         
@@ -81,7 +98,10 @@ class CANListener:
         self.training_features = []
         self.training_mode = True
         self.training_samples = 0
-        self.max_training_samples = 25  # Faster training
+        # Calibration size: number of authenticated normal samples used to
+        # establish the behavioral baseline. Configurable via CALIBRATION_SAMPLES
+        # (default 200 - a far more defensible baseline than the previous 25).
+        self.max_training_samples = int(os.environ.get("CALIBRATION_SAMPLES", "200"))
         
         # Startup grace period - ignore first N messages to avoid false positives during initialization
         self.startup_grace_period = 50  # Ignore first 50 messages
@@ -283,6 +303,9 @@ class CANListener:
             is_valid, reason = self.message_verifier.verify_message(secure_msg)
             if not is_valid:
                 self.rejected_messages += 1
+                # Record the authentication failure so message trust (T_msg) and
+                # the ASI HMAC term reflect it, even though the frame is dropped.
+                self.trust_engine.record_auth_outcome(False)
                 log_entry = {
                     "timestamp": time.strftime("%H:%M:%S"),
                     "can_id": f"0x{can_id:03x}",
@@ -310,19 +333,25 @@ class CANListener:
                 original_payload = bytes.fromhex(secure_msg['payload'])
                 data = original_payload  # Use verified payload
         else:
-            # No secure message found - TEMPORARILY ACCEPT WITH WARNING
-            self.verified_messages += 1  # Count as verified for now
+            # FAIL CLOSED: no valid signature => the message is unauthenticated
+            # (spoofed/injected) and is discarded, per the methodology
+            # ("messages failing authentication are immediately discarded").
+            # Authenticated-but-malicious traffic still reaches the ML/behavioral
+            # layers below; only unsigned/forged frames are dropped here.
+            self.rejected_messages += 1
+            self.trust_engine.record_auth_outcome(False)
             log_entry = {
                 "timestamp": time.strftime("%H:%M:%S"),
                 "can_id": f"0x{can_id:03x}",
-                "status": "ACCEPTED",
-                "reason": "No signature found - accepting",
+                "status": "REJECTED",
+                "reason": "No valid signature - message discarded (fail-closed)",
                 "device_id": f"ecu-{can_id:03x}"
             }
             self.message_log.append(log_entry)
             self.message_log = self.message_log[-50:]  # Keep last 50
-            secure_msg = {'device_id': f'ecu-{can_id:03x}'}  # Create fake secure_msg
-        
+            print(f"🚫 CRYPTO REJECTED: unauthenticated 0x{can_id:03x} (no valid signature)")
+            return  # Drop unauthenticated message
+
         # Extract signal values
         if can_id == 0x120:  # Steering angle
             angle = int.from_bytes(data[:2], 'big') / 10.0 - 45.0
@@ -352,7 +381,40 @@ class CANListener:
         self.feature_extractor.add_message(signal_name, timestamp, signal_value)
         ml_features = self.feature_extractor.get_all_features()
         ml_feature_snapshot = self._prepare_ml_feature_snapshot(ml_features)
-        
+
+        # Layer 0: context-aware adaptive Mahalanobis detection (paper Eq. 1).
+        # The decision uses an adaptive threshold tau(t) = tau0 + a*T(t) +
+        # b*sigma_s(t): T(t) is the current trust score and sigma_s(t) the
+        # normalized recent-speed variability. Both raise the threshold, so
+        # legitimate rash driving relaxes it and suppresses false alarms.
+        self._recent_speeds.append(self.current_speed)
+        if len(self._recent_speeds) >= 2:
+            import numpy as _np
+            state_variability = float(_np.std(self._recent_speeds)) / self._state_var_ref
+        else:
+            state_variability = 0.0
+        state_variability = min(1.0, max(0.0, state_variability))
+
+        mahalanobis_score = 0.0
+        mahal_is_anomaly = False
+        mahal_distance = 0.0
+        mahal_threshold = 0.0
+        if ml_feature_snapshot.get(signal_name):
+            trust_now = self.trust_engine.get_trust_score()
+            decision = self.mahalanobis_detector.adaptive_decision(
+                signal_name, ml_feature_snapshot[signal_name], self.current_speed,
+                trust=trust_now, state_variability=state_variability,
+            )
+            mahalanobis_score = decision["score"]
+            mahal_is_anomaly = bool(decision["is_anomaly"])
+            mahal_distance = decision["distance"]
+            mahal_threshold = decision["threshold"]
+            # Update the per-context baseline (poisoning-resistant: skips update
+            # when the message already scores as anomalous).
+            self.mahalanobis_detector.observe_and_update(
+                signal_name, ml_feature_snapshot[signal_name], self.current_speed
+            )
+
         # Layer 2: Enhanced Behavioral Analysis (Control Energy + Jerk)
         self.behavioral_analyzer.add_message(
             device_id, timestamp, signal_value, signal_name, 
@@ -473,6 +535,16 @@ class CANListener:
                     if violation:
                         detection_details.append(f"PHYSICS:{violation}")
             
+            # Adaptive Mahalanobis: independent OR-gate signal. Fires when the
+            # Mahalanobis distance exceeds the adaptive threshold tau(t) (paper
+            # Eq. 1). It can only raise the combined score, never suppress what
+            # the heavier ensemble already found, so it cannot regress recall.
+            if mahal_is_anomaly:
+                total_anomaly_score = max(total_anomaly_score, mahalanobis_score)
+                detection_details.append(
+                    f"Mahalanobis:D={mahal_distance:.1f}>tau={mahal_threshold:.1f}"
+                )
+
             # Add temporal anomalies to detection details
             if temporal_result['temporal_anomalies']:
                 for anomaly in temporal_result['temporal_anomalies']:
@@ -521,18 +593,37 @@ class CANListener:
                     print(f"Alert logging failed: {e}")
         
         # Update trust based on combined anomaly
+        # Real auth/temporal inputs (previously hardcoded to 1.0). This message
+        # authenticated to reach here (auth_result=1.0); failures are folded in
+        # via record_auth_outcome on the drop paths. Temporal trust reflects the
+        # temporal rate-of-change analysis.
+        temporal_trust = 1.0 - temporal_result['temporal_anomaly_score']
         self.trust_engine.update_trust(
             anomaly_score=total_anomaly_score,
-            auth_result=1.0,  # Crypto verified
-            temporal_score=1.0  # Always valid for now
+            auth_result=1.0,
+            temporal_score=temporal_trust,
         )
-        
+
         # Update MongoDB trust patterns
         analytics_db.update_trust_pattern(self.vehicle_id, self.trust_engine.get_trust_score())
-        
+
         # Get policy decision
         trust_score = self.trust_engine.get_trust_score()
         policy_decision = self.policy_engine.get_policy_decision(trust_score)
+
+        # Attack Severity Index (paper Eq. 3): ASI = w1*D_M(norm) +
+        # w2*(1-T_overall) + w3*H. D_M is normalized against its adaptive
+        # threshold; H is the HMAC failure rate (1 - message trust). Reporting
+        # only - it does not alter policy/IPS decisions.
+        d_norm = min(1.0, mahal_distance / mahal_threshold) if mahal_threshold > 0 else 0.0
+        hmac_failure_rate = 1.0 - self.trust_engine.get_component_trusts()["t_msg"]
+        asi = compute_attack_severity_index(
+            mahalanobis_norm=d_norm,
+            trust_overall=trust_score,
+            hmac_failure_rate=hmac_failure_rate,
+        )
+        self.last_asi = asi
+        self.last_asi_grade = severity_grade(asi)
         
         # Update IPS policy
         ips_policy = self.ips_engine.update_policy(trust_score, total_anomaly_score)
@@ -604,6 +695,13 @@ class CANListener:
             "ml_anomaly_score": float(ml_anomaly_score),
             "control_anomaly_score": float(control_anomaly_score),
             "physics_anomaly_score": float(physics_anomaly_score),
+            "mahalanobis_score": float(mahalanobis_score),
+            "mahalanobis_distance": float(mahal_distance),
+            "mahalanobis_threshold": float(mahal_threshold),
+            "attack_severity_index": float(self.last_asi),
+            "asi_grade": self.last_asi_grade,
+            "trust_components": self.trust_engine.get_component_trusts(),
+            "prevention_action": policy_decision.get("prevention_action"),
             "decision_threshold": float(self.anomaly_decision_threshold),
             "anomaly_decision": anomaly_decision,
             "physics_valid": is_physics_valid,
@@ -646,6 +744,10 @@ class CANListener:
                 "message_log": self.message_log
             },
             "vehicle_status": vehicle_status,
+            "asi": {
+                "index": self.last_asi,
+                "grade": self.last_asi_grade
+            },
             "ips": self.ips_engine.get_status(),
             "v2v": {
                 "publisher": self.v2v_alerts.get_status(),

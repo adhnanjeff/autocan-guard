@@ -107,7 +107,7 @@ class CANMessageGenerator:
         # Kafka producer for SDV network (optional)
         try:
             from simple_kafka_producer import SimpleKafkaProducer
-            self.kafka_producer = SimpleKafkaProducer("A")
+            self.kafka_producer = SimpleKafkaProducer("vehicleA")
             if self.kafka_producer.producer:
                 print("✅ Kafka producer ready for publishing")
             else:

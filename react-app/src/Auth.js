@@ -132,14 +132,6 @@ export const LoginScreen = () => {
             {loading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
-
-        <div className="mt-6 text-center text-sm text-gray-600">
-          <p className="mb-2">Demo Accounts:</p>
-          <div className="space-y-1">
-            <p><strong>Admin:</strong> admin / admin123</p>
-            <p><strong>Viewer:</strong> viewer / viewer123</p>
-          </div>
-        </div>
       </div>
     </div>
   );

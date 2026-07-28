@@ -1,3 +1,6 @@
+import os
+import secrets
+import logging
 import jwt
 import bcrypt
 import sqlite3
@@ -5,8 +8,19 @@ from datetime import datetime, timedelta
 from functools import wraps
 from flask import request, jsonify
 
+logger = logging.getLogger(__name__)
+
 # JWT Configuration
-JWT_SECRET = "autocan-guard-secret-key-2024"
+# Never hardcode the signing secret: a leaked secret lets anyone forge tokens.
+# Read it from the environment; if absent, generate an ephemeral per-process
+# secret (tokens won't survive a restart) and warn loudly.
+JWT_SECRET = os.getenv("JWT_SECRET")
+if not JWT_SECRET:
+    JWT_SECRET = secrets.token_urlsafe(64)
+    logger.warning(
+        "JWT_SECRET not set; using a random per-process secret. "
+        "Set the JWT_SECRET environment variable for stable tokens."
+    )
 JWT_ALGORITHM = "HS256"
 JWT_EXPIRY_MINUTES = 30
 
@@ -32,12 +46,24 @@ class AuthManager:
         conn.close()
     
     def _create_default_users(self):
-        """Create default admin and viewer users"""
+        """Create default admin and viewer users.
+
+        Passwords come from ADMIN_PASSWORD / VIEWER_PASSWORD env vars. If unset,
+        a random password is generated and logged once so no weak, well-known
+        default (admin123/viewer123) ever ships. Existing users are left as-is.
+        """
+        admin_password = os.getenv("ADMIN_PASSWORD") or secrets.token_urlsafe(12)
+        viewer_password = os.getenv("VIEWER_PASSWORD") or secrets.token_urlsafe(12)
+        if not os.getenv("ADMIN_PASSWORD"):
+            logger.warning("ADMIN_PASSWORD not set; generated admin password: %s", admin_password)
+        if not os.getenv("VIEWER_PASSWORD"):
+            logger.warning("VIEWER_PASSWORD not set; generated viewer password: %s", viewer_password)
+
         users = [
-            ("admin", "admin123", "admin"),
-            ("viewer", "viewer123", "viewer")
+            ("admin", admin_password, "admin"),
+            ("viewer", viewer_password, "viewer")
         ]
-        
+
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
         

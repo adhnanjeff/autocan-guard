@@ -1,124 +1,185 @@
 import time
 from storage import get_storage_manager
 
+
+def _clamp(value, low=0.0, high=1.0):
+    return max(low, min(high, value))
+
+
 class TrustEngine:
-    def __init__(self, alpha=0.15, beta=0.2, gamma=0.05, vehicle_id="vehicleA"):
-        # Trust decay parameters (balanced for normal operation)
-        self.alpha = alpha  # anomaly weight (reduced from 0.4 to 0.15 - less aggressive)
-        self.beta = beta    # auth weight
-        self.gamma = gamma  # temporal weight
-        
-        # Vehicle identification
+    """Multi-level trust engine (paper Eq. 2).
+
+    Instead of a single recursive score, trust is decomposed into three
+    components and fused with weights:
+
+        T_overall = w_msg * T_msg + w_node * T_node + w_behavior * T_behavior
+
+    * T_msg      – Message trust from HMAC verification. An EWMA of per-message
+                   authentication outcomes (1.0 pass, 0.0 fail). Because failed
+                   or unsigned messages are dropped before scoring, callers feed
+                   those outcomes in via ``record_auth_outcome`` so this term
+                   reflects the real recent HMAC pass-rate, not a constant 1.0.
+    * T_node     – Node trust from the ECU's historical behavior. A recursive
+                   decay/recovery score (preserves temporal memory: it erodes
+                   under sustained anomalies and rebuilds during clean traffic).
+    * T_behavior – Behavior trust from the current ML/Mahalanobis anomaly
+                   (instantaneous: 1 - anomaly_score).
+
+    Weights default to (0.3, 0.4, 0.3) and sum to 1.0 so T_overall stays in
+    [0, 1]. The previous single-score recursive model is retained as the T_node
+    component, so existing policy/IPS thresholds continue to behave sensibly.
+    """
+
+    def __init__(self, w_msg=0.3, w_node=0.4, w_behavior=0.3,
+                 node_decay=0.15, node_temporal=0.05, recovery_rate=0.03,
+                 msg_ewma=0.2, vehicle_id="vehicleA"):
+        # Fusion weights (paper Eq. 2). Kept normalized (sum = 1).
+        self.w_msg = w_msg
+        self.w_node = w_node
+        self.w_behavior = w_behavior
+
+        # T_node dynamics (historical behavior). node_decay/node_temporal are
+        # the anomaly/temporal decay weights; recovery_rate rebuilds trust.
+        self.node_decay = node_decay
+        self.node_temporal = node_temporal
+        self.recovery_rate = recovery_rate
+
+        # EWMA weight for the message-trust update.
+        self.msg_ewma = msg_ewma
+
         self.vehicle_id = vehicle_id
-        
-        # Trust state
-        self.trust_score = 1.0  # Start with full trust
-        self.last_update = time.time()
-        
-        # Trust bounds
+
+        # Component trust values.
+        self.t_msg = 1.0
+        self.t_node = 1.0
+        self.t_behavior = 1.0
+
+        # Fused overall trust.
+        self.trust_score = 1.0
+
         self.min_trust = 0.0
         self.max_trust = 1.0
-        
-        # Recovery rate (faster recovery during normal operation)
-        self.recovery_rate = 0.03  # Increased from 0.01 to 0.03
-        
-        # ML Toggle - centralized control
-        self.ml_enabled = True  # Default: ML ON
-        
-        # Storage integration
+        self.last_update = time.time()
+
+        # ML toggle (unchanged semantics: off => ignore anomaly influence).
+        self.ml_enabled = True
+
         self.storage = get_storage_manager()
-        
+
+    # ------------------------------------------------------------------
+    # Component updates
+    # ------------------------------------------------------------------
+    def record_auth_outcome(self, passed: bool):
+        """Fold one HMAC verification outcome into T_msg (message trust).
+
+        Call this for EVERY message that reaches the gateway, including those
+        dropped for a missing/invalid signature (passed=False), so T_msg
+        reflects the true recent authentication pass-rate.
+        """
+        sample = 1.0 if passed else 0.0
+        self.t_msg = (1 - self.msg_ewma) * self.t_msg + self.msg_ewma * sample
+        self.t_msg = _clamp(self.t_msg)
+        self._recompute_overall()
+        return self.t_msg
+
     def update_trust(self, anomaly_score, auth_result=1.0, temporal_score=1.0):
-        """Update trust score based on inputs"""
+        """Update node/behavior trust from an authenticated, scored message.
+
+        ``auth_result`` (1.0 pass) is also folded into T_msg so authenticated
+        traffic pushes message trust back up; the drop path uses
+        ``record_auth_outcome`` for failures.
+        """
         current_time = time.time()
-        
-        # Apply ML toggle - ignore ML anomaly score when disabled
-        effective_anomaly_score = anomaly_score if self.ml_enabled else 0.0
-        
-        # Trust decay formula - only for significant anomalies
-        trust_delta = 0.0
-        
-        # Only apply decay if anomaly score is significant (> 0.3)
-        if effective_anomaly_score > 0.3:
-            trust_delta = (
-                - self.alpha * effective_anomaly_score  # ML influence controlled by toggle
-                - self.beta * (1 - auth_result)         # Crypto always active
-                - self.gamma * (1 - temporal_score)     # Temporal always active
-            )
-        
-        # Add recovery when anomaly is low
-        if effective_anomaly_score < 0.2:
-            trust_delta += self.recovery_rate
-        
-        # Update trust
-        self.trust_score += trust_delta
-        
-        # Clamp to bounds
-        self.trust_score = max(self.min_trust, min(self.max_trust, self.trust_score))
-        
+
+        # Message trust: this message authenticated successfully to be scored.
+        self.t_msg = (1 - self.msg_ewma) * self.t_msg + self.msg_ewma * float(auth_result)
+        self.t_msg = _clamp(self.t_msg)
+
+        # ML toggle: ignore anomaly influence when ML is disabled.
+        effective_anomaly = anomaly_score if self.ml_enabled else 0.0
+
+        # Node trust: recursive decay/recovery (historical behavior).
+        node_delta = 0.0
+        if effective_anomaly > 0.3:
+            node_delta -= self.node_decay * effective_anomaly
+            node_delta -= self.node_temporal * (1 - temporal_score)
+        if effective_anomaly < 0.2:
+            node_delta += self.recovery_rate
+        self.t_node = _clamp(self.t_node + node_delta)
+
+        # Behavior trust: instantaneous complement of the anomaly score.
+        self.t_behavior = _clamp(1.0 - effective_anomaly)
+
+        self._recompute_overall()
         self.last_update = current_time
-        
-        # Log to storage (async, non-blocking)
+
+        # Log to storage (async, non-blocking); ignore failures.
         try:
             self.storage.log_trust_update(
-                self.vehicle_id, 
-                self.trust_score, 
-                self.ml_enabled, 
-                anomaly_score
+                self.vehicle_id, self.trust_score, self.ml_enabled, anomaly_score
             )
-        except Exception as e:
-            # Silently ignore storage errors to prevent API crashes
+        except Exception:
             pass
-        
+
         return self.trust_score
-    
+
+    def _recompute_overall(self):
+        self.trust_score = _clamp(
+            self.w_msg * self.t_msg
+            + self.w_node * self.t_node
+            + self.w_behavior * self.t_behavior
+        )
+
+    # ------------------------------------------------------------------
+    # Accessors
+    # ------------------------------------------------------------------
     def get_trust_score(self):
-        """Get current trust score"""
         return self.trust_score
-    
+
+    def get_component_trusts(self):
+        """Return the three component trusts (for ASI/reporting)."""
+        return {"t_msg": self.t_msg, "t_node": self.t_node, "t_behavior": self.t_behavior}
+
     def get_trust_level(self):
-        """Get trust level category"""
         if self.trust_score > 0.8:
             return "HIGH"
         elif self.trust_score > 0.6:
-            return "MEDIUM" 
+            return "MEDIUM"
         elif self.trust_score > 0.4:
             return "LOW"
         else:
             return "CRITICAL"
-    
+
     def reset_trust(self):
-        """Reset trust to maximum"""
+        self.t_msg = 1.0
+        self.t_node = 1.0
+        self.t_behavior = 1.0
         self.trust_score = self.max_trust
         self.last_update = time.time()
-    
+
     def set_ml_enabled(self, enabled):
-        """Toggle ML behavioral analysis on/off"""
         self.ml_enabled = enabled
-        
+
     def is_ml_enabled(self):
-        """Check if ML is enabled"""
         return self.ml_enabled
-        
+
     def get_security_mode(self):
-        """Get current security mode"""
         return "CRYPTO_PLUS_ML" if self.ml_enabled else "CRYPTO_ONLY"
-    
+
     def set_ips_active(self, active: bool):
-        """Set IPS active status to control trust recovery"""
         self._ips_active = active
-        
+
     def get_status(self):
-        """Get trust engine status"""
         return {
             "trust_score": self.trust_score,
             "trust_level": self.get_trust_level(),
             "last_update": self.last_update,
             "ml_enabled": self.ml_enabled,
             "security_mode": self.get_security_mode(),
-            "parameters": {
-                "alpha": self.alpha,
-                "beta": self.beta, 
-                "gamma": self.gamma
-            }
+            "components": self.get_component_trusts(),
+            "weights": {
+                "w_msg": self.w_msg,
+                "w_node": self.w_node,
+                "w_behavior": self.w_behavior,
+            },
         }

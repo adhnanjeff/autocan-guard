@@ -1,0 +1,67 @@
+{
+  "dataset": "car_hacking",
+  "n_frames": 600,
+  "n_train": 420,
+  "n_test": 180,
+  "class_balance": {
+    "normal": 461,
+    "attack": 139
+  },
+  "classification_metrics": {
+    "accuracy": 0.9833333333333333,
+    "precision": 0.975609756097561,
+    "recall": 0.9523809523809523,
+    "f1": 0.963855421686747,
+    "specificity": 0.9927536231884058,
+    "fpr": 0.007246376811594203,
+    "confusion": {
+      "tp": 40,
+      "tn": 137,
+      "fp": 1,
+      "fn": 2
+    }
+  },
+  "latency_throughput": {
+    "mean_ms": 13.44530064961873,
+    "median_ms": 13.541375003114808,
+    "p95_ms": 14.065686854155501,
+    "p99_ms": 14.477489429264104,
+    "throughput_msgs_per_sec": 74.37542871370133
+  },
+  "per_attack_breakdown": {
+    "dos": {
+      "n": 22,
+      "detected": 22,
+      "recall": 1.0
+    },
+    "fuzzy": {
+      "n": 20,
+      "detected": 18,
+      "recall": 0.9
+    },
+    "normal": {
+      "n": 138,
+      "false_positives": 1,
+      "fpr": 0.007246376811594203
+    }
+  },
+  "feature_names": [
+    "iat_same_id",
+    "iat_same_id_dev",
+    "iat_global",
+    "can_id_norm",
+    "dlc",
+    "payload_entropy",
+    "hamming_prev",
+    "byte_change_count",
+    "id_count_window",
+    "total_msgs_window",
+    "unique_ids_window",
+    "id_novelty",
+    "mean_byte",
+    "byte_std"
+  ],
+  "feature_set": "full",
+  "normalized": true,
+  "model_description": "BenchmarkModel: average of RandomForestClassifier(n_estimators=200, class_weight=balanced) and GradientBoostingClassifier probabilities, threshold=0.5. IsolationForest fitted on normal training rows for an auxiliary anomaly score (not used in the final prediction)."
+}

@@ -17,6 +17,7 @@ class AnalyticsDB:
         self.client = None
         self.db = None
         self.connected = False
+        [1]
         self._connect()
     
     def _connect(self):

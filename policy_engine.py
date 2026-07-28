@@ -9,6 +9,15 @@ class PolicyEngine:
         self.max_steering_angle = 15.0  # degrees
         self.max_speed = 50.0  # km/h
         
+    # Map internal containment actions to the paper's prevention-action names
+    # (Methodology: ALLOW / WARN / LIMIT / BLOCK).
+    PREVENTION_ACTION = {
+        "NONE": "ALLOW",
+        "WARNING": "WARN",
+        "CLAMP": "LIMIT",
+        "IGNORE": "BLOCK",
+    }
+
     def get_containment_action(self, trust_score):
         """Determine containment action based on trust"""
         if trust_score > self.warning_threshold:
@@ -19,6 +28,10 @@ class PolicyEngine:
             return "CLAMP"
         else:
             return "IGNORE"
+
+    def get_prevention_action(self, trust_score):
+        """Paper-facing prevention action name: ALLOW / WARN / LIMIT / BLOCK."""
+        return self.PREVENTION_ACTION[self.get_containment_action(trust_score)]
     
     def apply_steering_policy(self, steering_angle, trust_score):
         """Apply steering containment policy"""
@@ -54,6 +67,7 @@ class PolicyEngine:
         
         return {
             "action": action,
+            "prevention_action": self.PREVENTION_ACTION[action],
             "trust_score": trust_score,
             "steering_limit": self.max_steering_angle if action in ["CLAMP", "IGNORE"] else None,
             "speed_limit": self.max_speed if action in ["CLAMP", "IGNORE"] else None,
@@ -66,6 +80,7 @@ class PolicyEngine:
         
         return {
             "action": action,
+            "prevention_action": self.PREVENTION_ACTION[action],
             "trust_score": trust_score,
             "steering_limit": self.max_steering_angle if action in ["CLAMP", "IGNORE"] else None,
             "speed_limit": self.max_speed if action in ["CLAMP", "IGNORE"] else None,

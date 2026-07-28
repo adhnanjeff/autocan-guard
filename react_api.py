@@ -10,17 +10,29 @@ import pickle
 from security import MessageSigner
 
 # OAuth imports
+import secrets
+import logging
 import jwt
 import bcrypt
 import sqlite3
 from datetime import datetime, timedelta
 from functools import wraps
 
+logger = logging.getLogger(__name__)
+
 app = Flask(__name__)
 CORS(app, origins=["http://localhost:3000"], supports_credentials=True)
 
 # JWT Configuration
-JWT_SECRET = "autocan-guard-secret-key-2024"
+# Read the signing secret from the environment; never hardcode it. Fall back to
+# an ephemeral per-process secret (with a warning) when unset.
+JWT_SECRET = os.getenv("JWT_SECRET")
+if not JWT_SECRET:
+    JWT_SECRET = secrets.token_urlsafe(64)
+    logger.warning(
+        "JWT_SECRET not set; using a random per-process secret. "
+        "Set the JWT_SECRET environment variable for stable tokens."
+    )
 JWT_ALGORITHM = "HS256"
 JWT_EXPIRY_MINUTES = 30
 
@@ -45,7 +57,13 @@ class AuthManager:
         conn.close()
     
     def _create_default_users(self):
-        users = [("admin", "admin123", "admin"), ("viewer", "viewer123", "viewer")]
+        admin_password = os.getenv("ADMIN_PASSWORD") or secrets.token_urlsafe(12)
+        viewer_password = os.getenv("VIEWER_PASSWORD") or secrets.token_urlsafe(12)
+        if not os.getenv("ADMIN_PASSWORD"):
+            logger.warning("ADMIN_PASSWORD not set; generated admin password: %s", admin_password)
+        if not os.getenv("VIEWER_PASSWORD"):
+            logger.warning("VIEWER_PASSWORD not set; generated viewer password: %s", viewer_password)
+        users = [("admin", admin_password, "admin"), ("viewer", viewer_password, "viewer")]
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
         for username, password, role in users:

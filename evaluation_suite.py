@@ -379,53 +379,59 @@ class EvaluationSuite:
         print("   ✓ confidence_intervals.png")
     
     def plot_variance_across_runs(self):
-        """Plot variance analysis across runs"""
-        fig, axes = plt.subplots(1, 3, figsize=(15, 5))
+        """Plot variance analysis across runs with journal-quality styling"""
+        fig, axes = plt.subplots(1, 3, figsize=(18, 5))
         
         runs = list(range(1, len(self.run_data) + 1))
         
         # Latency variance
         latencies = [r["latency"]["mean"] for r in self.run_data]
         ax1 = axes[0]
-        ax1.plot(runs, latencies, 'o-', color='steelblue', linewidth=2, markersize=8)
+        ax1.plot(runs, latencies, 'o-', color='steelblue', linewidth=2.5, markersize=9, markeredgewidth=2, markeredgecolor='white')
         ax1.fill_between(runs, 
                          [l - r["latency"]["stdev"] for l, r in zip(latencies, self.run_data)],
                          [l + r["latency"]["stdev"] for l, r in zip(latencies, self.run_data)],
                          alpha=0.3, color='steelblue')
-        ax1.axhline(statistics.mean(latencies), color='red', linestyle='--', label='Mean')
-        ax1.set_xlabel('Run', fontsize=11)
-        ax1.set_ylabel('Mean Latency (ms)', fontsize=11)
-        ax1.set_title('Latency Variance Across Runs', fontsize=12, fontweight='bold')
-        ax1.legend()
+        ax1.axhline(statistics.mean(latencies), color='red', linestyle='--', linewidth=2, label='Mean')
+        ax1.set_xlabel('Run', fontsize=12, fontweight='bold')
+        ax1.set_ylabel('Mean Latency (ms)', fontsize=12, fontweight='bold')
+        ax1.set_title('Latency Variance Across Runs', fontsize=13, fontweight='bold')
+        ax1.legend(fontsize=11)
+        ax1.grid(True, alpha=0.3, linestyle='--', linewidth=0.5)
+        ax1.set_xticks(runs)
         
         # Throughput variance
         throughputs = [r["throughput"] for r in self.run_data]
         ax2 = axes[1]
-        ax2.plot(runs, throughputs, 'o-', color='green', linewidth=2, markersize=8)
-        ax2.axhline(statistics.mean(throughputs), color='red', linestyle='--', label='Mean')
+        ax2.plot(runs, throughputs, 'o-', color='green', linewidth=2.5, markersize=9, markeredgewidth=2, markeredgecolor='white')
+        ax2.axhline(statistics.mean(throughputs), color='red', linestyle='--', linewidth=2, label='Mean')
         ax2.fill_between(runs, 
                          [t * 0.95 for t in throughputs],
                          [t * 1.05 for t in throughputs],
                          alpha=0.3, color='green')
-        ax2.set_xlabel('Run', fontsize=11)
-        ax2.set_ylabel('Throughput (msg/s)', fontsize=11)
-        ax2.set_title('Throughput Variance Across Runs', fontsize=12, fontweight='bold')
-        ax2.legend()
+        ax2.set_xlabel('Run', fontsize=12, fontweight='bold')
+        ax2.set_ylabel('Throughput (msg/s)', fontsize=12, fontweight='bold')
+        ax2.set_title('Throughput Variance Across Runs', fontsize=13, fontweight='bold')
+        ax2.legend(fontsize=11)
+        ax2.grid(True, alpha=0.3, linestyle='--', linewidth=0.5)
+        ax2.set_xticks(runs)
         
         # Accuracy variance
         accuracies = [r["accuracy"] for r in self.run_data]
         ax3 = axes[2]
-        ax3.plot(runs, accuracies, 'o-', color='orange', linewidth=2, markersize=8)
-        ax3.axhline(statistics.mean(accuracies), color='red', linestyle='--', label='Mean')
-        ax3.set_xlabel('Run', fontsize=11)
-        ax3.set_ylabel('Accuracy (%)', fontsize=11)
-        ax3.set_title('Detection Accuracy Across Runs', fontsize=12, fontweight='bold')
+        ax3.plot(runs, accuracies, 'o-', color='orange', linewidth=2.5, markersize=9, markeredgewidth=2, markeredgecolor='white')
+        ax3.axhline(statistics.mean(accuracies), color='red', linestyle='--', linewidth=2, label='Mean')
+        ax3.set_xlabel('Run', fontsize=12, fontweight='bold')
+        ax3.set_ylabel('Accuracy (%)', fontsize=12, fontweight='bold')
+        ax3.set_title('Detection Accuracy Across Runs', fontsize=13, fontweight='bold')
         ax3.set_ylim([min(accuracies) - 5, 105])
-        ax3.legend()
+        ax3.legend(fontsize=11)
+        ax3.grid(True, alpha=0.3, linestyle='--', linewidth=0.5)
+        ax3.set_xticks(runs)
         
-        plt.suptitle('Variance Analysis Across Evaluation Runs', fontsize=14, fontweight='bold')
+        plt.suptitle('Variance Analysis Across Evaluation Runs', fontsize=16, fontweight='bold', y=1.02)
         plt.tight_layout()
-        plt.savefig(f"{OUTPUT_DIR}/variance_across_runs.png", dpi=150)
+        plt.savefig(f"{OUTPUT_DIR}/variance_across_runs.png", dpi=300, bbox_inches='tight')
         plt.close()
         print("   ✓ variance_across_runs.png")
     
@@ -683,9 +689,11 @@ def main():
     print("1. Quick evaluation (3 runs, 500 messages each)")
     print("2. Standard evaluation (5 runs, 1000 messages each)")
     print("3. Comprehensive evaluation (10 runs, 2000 messages each)")
-    print("4. Custom evaluation")
+    print("4. Journal publication (15 runs, 1500 messages each) - Recommended for papers")
+    print("5. Extended journal (20 runs, 2000 messages each) - Maximum statistical power")
+    print("6. Custom evaluation")
     
-    choice = input("\nEnter choice (1-4): ").strip()
+    choice = input("\nEnter choice (1-6): ").strip()
     
     if choice == "1":
         suite = EvaluationSuite(num_runs=3, messages_per_run=500)
@@ -694,6 +702,12 @@ def main():
     elif choice == "3":
         suite = EvaluationSuite(num_runs=10, messages_per_run=2000)
     elif choice == "4":
+        print("\n📄 Journal publication mode selected (15 runs)")
+        suite = EvaluationSuite(num_runs=15, messages_per_run=1500)
+    elif choice == "5":
+        print("\n📄 Extended journal mode selected (20 runs)")
+        suite = EvaluationSuite(num_runs=20, messages_per_run=2000)
+    elif choice == "6":
         runs = int(input("Number of runs: ") or "5")
         messages = int(input("Messages per run: ") or "1000")
         suite = EvaluationSuite(num_runs=runs, messages_per_run=messages)

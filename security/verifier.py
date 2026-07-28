@@ -22,7 +22,10 @@ class MessageVerifier:
             payload = secure_msg.get("payload")
             signature = secure_msg.get("signature")
             
-            if not all([device_id, timestamp, sequence, can_id, payload, signature]):
+            # Presence check by None, not truthiness: can_id 0x000 and sequence 0
+            # are valid values that must not be rejected as "missing".
+            if any(field is None for field in
+                   (device_id, timestamp, sequence, can_id, payload, signature)):
                 return False, "Missing required fields"
             
             # 1. Device ID validation
@@ -35,11 +38,18 @@ class MessageVerifier:
             if abs(current_time - timestamp) > TIMESTAMP_WINDOW_MS:
                 return False, f"Message too old: {current_time - timestamp}ms"
             
-            # 3. Sequence number validation - reset if gap is too large
+            # 3. Sequence number validation - strictly monotonic (replay/reorder
+            #    protection). A non-increasing sequence is rejected. The only
+            #    permitted "reset" is a genuine fresh start (sequence <= 2, which
+            #    the signer emits after its persisted sequence file is cleared);
+            #    the earlier "accept anything >100 below last_seq" rule is removed
+            #    because it let an attacker force a reset and replay old frames.
+            #    The 5-second timestamp window above remains the outer bound.
             last_seq = self.last_sequences[device_id]
             if sequence <= last_seq:
-                # If sequence is much lower, assume restart and reset
-                if sequence < last_seq - 100:
+                if last_seq > 0 and sequence <= 2:
+                    # Device restarted with a fresh sequence file; accept and
+                    # re-anchor. Timestamp freshness (checked above) still applies.
                     self.last_sequences[device_id] = sequence
                 else:
                     return False, f"Sequence replay: {sequence} <= {last_seq}"

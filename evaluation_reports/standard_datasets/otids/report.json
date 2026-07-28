@@ -1,0 +1,63 @@
+{
+  "dataset": "otids",
+  "n_frames": 760,
+  "n_train": 532,
+  "n_test": 228,
+  "class_balance": {
+    "normal": 556,
+    "attack": 204
+  },
+  "classification_metrics": {
+    "accuracy": 0.9649122807017544,
+    "precision": 0.9649122807017544,
+    "recall": 0.9016393442622951,
+    "f1": 0.9322033898305084,
+    "specificity": 0.9880239520958084,
+    "fpr": 0.011976047904191617,
+    "confusion": {
+      "tp": 55,
+      "tn": 165,
+      "fp": 2,
+      "fn": 6
+    }
+  },
+  "latency_throughput": {
+    "mean_ms": 13.539114174802723,
+    "median_ms": 13.617999997222796,
+    "p95_ms": 14.377412510657448,
+    "p99_ms": 17.097409248235607,
+    "throughput_msgs_per_sec": 73.86007585792228
+  },
+  "per_attack_breakdown": {
+    "dos": {
+      "n": 17,
+      "detected": 17,
+      "recall": 1.0
+    },
+    "fuzzy": {
+      "n": 27,
+      "detected": 24,
+      "recall": 0.8888888888888888
+    },
+    "impersonation": {
+      "n": 17,
+      "detected": 14,
+      "recall": 0.8235294117647058
+    },
+    "normal": {
+      "n": 167,
+      "false_positives": 2,
+      "fpr": 0.011976047904191617
+    }
+  },
+  "feature_names": [
+    "can_id",
+    "dlc",
+    "payload_entropy",
+    "inter_message_interval",
+    "payload_variation"
+  ],
+  "feature_set": "paper5",
+  "normalized": true,
+  "model_description": "BenchmarkModel: average of RandomForestClassifier(n_estimators=200, class_weight=balanced) and GradientBoostingClassifier probabilities, threshold=0.5. IsolationForest fitted on normal training rows for an auxiliary anomaly score (not used in the final prediction)."
+}
